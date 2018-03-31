@@ -7,9 +7,9 @@ exports.getSelfInformation = async ctx => {
 exports.login = async ctx => {
   const { code } = ctx.request.body;
   ctx.verify({ data: code, type: 'string', message: 'invalid code' });
-  let customer_id;
+  let customer;
   try {
-    customer_id = await customerService.login(code);
+    customer = await customerService.login(code);
   } catch (err) {
     ctx.log.warn(err.message, {
       trace: err.trace,
@@ -18,8 +18,8 @@ exports.login = async ctx => {
     });
     ctx.throw(400, '获取Openid失败');
   }
-  ctx.session.customer_id = customer_id;
-  ctx.body = await customerService.getInformationById(customer_id);
+  ctx.session.customer_id = customer.customer_id;
+  ctx.body = customer;
 };
 
 exports.logout = ctx => {
