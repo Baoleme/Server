@@ -6,5 +6,8 @@ module.exports = {
     user: 'baoleme@mail.com',
     pass: 'baolemeemail'
   },
-  from: '饱了么<baoleme@mail.com>'
+  from: '饱了么<baoleme@mail.com>',
+  cipherKey: 'baolemeEmailConfirm',
+  // 确认链接有效时间，10分钟
+  confirmLinkMaxage: 10 * 60 * 1000
 };

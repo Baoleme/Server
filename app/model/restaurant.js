@@ -33,3 +33,17 @@ exports.getIdAndiePasswordByEmail = async email => {
   `;
   return (await query(sql, [email]))[0];
 };
+
+exports.update = async (restaurant_id, options) => {
+  let sql = 'UPDATE restaurant SET';
+  const data = [];
+  for (const key in options) {
+    sql += ' ?? = ?,';
+    data.push(key);
+    data.push(options[key]);
+  }
+  sql = sql.substr(0, sql.length - 1);
+  sql += ' WHERE user_id = ?';
+  data.push(restaurant_id);
+  return query(sql, data);
+};

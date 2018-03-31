@@ -3,7 +3,9 @@ const router = new Router();
 const assert = require('../../lib/assert');
 
 const allowNotLoginList = {
-  get: [],
+  get: [
+    '/restaurant/emailConfirm'
+  ],
   post: [
     '/restaurant',
     '/restaurant/session',

@@ -4,11 +4,10 @@ exports.create = async ctx => {
   const { email, name, password } = ctx.request.body;
   ctx.verify(
     { data: email, type: 'string', message: 'invalid email' },
-    { data: name, type: 'string', message: 'invalid name' },
+    { data: name, type: 'string', maxLength: 50, message: 'invalid name' },
     { data: password, type: 'string', message: 'invalid password' }
   );
   ctx.assert(/.+@.+\..+/.test(email), 'invalid email');
-  ctx.assert(name.length < 50, 'name to long');
   ctx.assert(password.length === 32, 'invalid password');
   await restaurantService.create({
     email,
@@ -35,10 +34,18 @@ exports.logout = ctx => {
   ctx.status = 200;
 };
 
-exports.getSelfInformation = ctx => {
-
+exports.getSelfInformation = async ctx => {
+  ctx.body = await restaurantService.getInformationById(ctx.session.restaurant_id);
 };
 
-exports.emailConfirm = ctx => {
+exports.sendConfirmEmail = async ctx => {
+  await restaurantService.sendConfirmEmail(ctx.session.restaurant_id);
+  ctx.status = 200;
+};
 
+exports.emailConfirm = async ctx => {
+  const { cipher } = ctx.request.body;
+  ctx.verify({ data: cipher, type: 'string', message: 'invalid cipher' });
+  await restaurantService.emailConfirm(cipher);
+  ctx.status = 200;
 };
