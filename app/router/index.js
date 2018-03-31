@@ -33,12 +33,14 @@ router.use('/restaurant', (ctx, next) => {
   if (!ctx.state.passedLogincheck) {
     assert(ctx.session.restaurant_id, '请先登录');
   }
+  return next();
 });
 
 router.use('/customer', (ctx, next) => {
   if (!ctx.state.passedLogincheck) {
     assert(ctx.session.customer_id, '请先登录');
   }
+  return next();
 });
 
 router.use(require('./restaurant/account').routes());
