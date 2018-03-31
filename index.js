@@ -45,7 +45,7 @@ app.use(require('./app/router'));
 app.on('error', (err, ctx) => {
   if (!err.expose) {
     log.error(err.message, {
-      trace: err.trace,
+      trace: err.stack,
       context: ctx,
       session: ctx.session
     });

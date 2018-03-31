@@ -16,9 +16,9 @@ async function getByField (field, value) {
     customer_id,
     openid
     FROM customer
-    WHERE ${field} = ?
+    WHERE ?? = ?
   `;
-  return (await query(sql, [value]))[0];
+  return (await query(sql, [field, value]))[0];
 }
 
 exports.getById = async customer_id => {
