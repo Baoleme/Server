@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Baoleme/Server#readme",
   "dependencies": {
     "@koa/cors": "^2.2.1",
+    "axios": "^0.18.0",
     "cross-env": "^5.1.4",
     "fs-extra": "^5.0.0",
     "koa": "^2.5.0",

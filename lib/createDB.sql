@@ -14,5 +14,8 @@ CREATE TABLE restaurant (
 );
 
 CREATE TABLE customer (
-  `customer_id` INT UNSIGNED NOT NULL AUTO_INCREMENT
-)
+  `customer_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `openid` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`customer_id`),
+  UNIQUE (`openid`)
+);

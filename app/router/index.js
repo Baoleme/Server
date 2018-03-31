@@ -6,11 +6,13 @@ const allowNotLoginList = {
   get: [],
   post: [
     '/restaurant',
-    '/restaurant/session'
+    '/restaurant/session',
+    '/customer/session'
   ],
   put: [],
   delete: [
-    '/restaurant/session'
+    '/restaurant/session',
+    '/customer/session'
   ]
 };
 
@@ -38,5 +40,6 @@ router.use('/customer', (ctx, next) => {
 });
 
 router.use(require('./restaurant/account').routes());
+router.use(require('./customer/account').routes());
 
 module.exports = router.routes();

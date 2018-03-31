@@ -1,10 +1,9 @@
 const Router = require('koa-router');
 const router = new Router();
-const ctrl = require('../../controller/restaurant/account');
+const ctrl = require('../../controller/customer/account');
 
-router.post('/restaurant', ctrl.create);
+router.get('/restaurant/self', ctrl.getSelfInformation);
 router.post('/restaurant/session', ctrl.login);
 router.delete('/restaurant/session', ctrl.logout);
-router.get('/restaurant/self', ctrl.getSelfInformation);
 
 module.exports = ctrl;
