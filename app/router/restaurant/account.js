@@ -6,5 +6,6 @@ router.post('/restaurant', ctrl.create);
 router.post('/restaurant/session', ctrl.login);
 router.delete('/restaurant/session', ctrl.logout);
 router.get('/restaurant/self', ctrl.getSelfInformation);
+router.get('/restaurant/emailConfirm', ctrl.emailConfirm);
 
-module.exports = ctrl;
+module.exports = router;
