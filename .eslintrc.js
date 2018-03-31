@@ -19,6 +19,7 @@ module.exports = {
     // allow async-await
     'generator-star-spacing': 0,
     // no console
-    'no-console': 2
+    'no-console': 2,
+    'camelcase': 0
   }
 };
