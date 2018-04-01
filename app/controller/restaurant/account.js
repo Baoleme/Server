@@ -25,7 +25,6 @@ exports.login = async ctx => {
   );
   ctx.assert(/.+@.+\..+/.test(email), 'invalid email');
   ctx.assert(/[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}/.test(password), 'invalid password');
-  ctx.assert(password.length === 32, 'invalid password');
   ctx.body = await restaurantService.login(email, password);
   ctx.session.restaurant_id = ctx.body.restaurant_id;
 };
