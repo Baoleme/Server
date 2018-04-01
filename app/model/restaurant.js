@@ -26,8 +26,8 @@ exports.getById = async restaurant_id => {
 exports.getIdAndiePasswordByEmail = async email => {
   const sql = `
     SELECT
-    password,
-    id
+    restaurant_id,
+    password
     FROM restaurant
     WHERE email = ?
   `;
