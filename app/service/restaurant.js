@@ -10,7 +10,7 @@ exports.create = restaurant => {
 };
 
 exports.login = async (email, password) => {
-  const restaurant = await restaurantModel.getPasswordByEmail(email);
+  const restaurant = await restaurantModel.getIdAndiePasswordByEmail(email);
   assert(password === restaurant.password, '用户名或密码错误');
   return restaurantModel.getById(restaurant.restaurant_id);
 };
@@ -40,13 +40,13 @@ exports.emailConfirm = async cipher => {
   });
 };
 
-function encipher (raw) {
+function encipher(raw) {
   const cipher = crypto.createCipher('aes192', mailConfig.cipherKey);
   let encrypted = cipher.update(raw);
   return encrypted + cipher.final('hex');
 }
 
-function decipher (encrypted) {
+function decipher(encrypted) {
   const decipher = crypto.createDecipher('aes192', mailConfig.cipherKey);
   let decrypted = decipher.update(encrypted, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
