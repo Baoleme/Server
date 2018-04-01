@@ -8,7 +8,7 @@ exports.create = async ctx => {
     { data: password, type: 'string', message: 'invalid password' }
   );
   ctx.assert(/.+@.+\..+/.test(email), 'invalid email');
-  ctx.assert(password.length === 32, 'invalid password');
+  ctx.assert(/[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}/.test(password), 'invalid password');
   await restaurantService.create({
     email,
     name,
@@ -24,6 +24,7 @@ exports.login = async ctx => {
     { data: password, type: 'string', message: 'invalid password' }
   );
   ctx.assert(/.+@.+\..+/.test(email), 'invalid email');
+  ctx.assert(/[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}/.test(password), 'invalid password');
   ctx.assert(password.length === 32, 'invalid password');
   ctx.body = await restaurantService.login(email, password);
   ctx.session.restaurant_id = ctx.body.restaurant_id;
