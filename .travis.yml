@@ -21,4 +21,4 @@ deploy:
   script: bash script/deploy.sh
   skip_cleanup: true
   on:
-    all_branches: true
+    branch: feature-travis
