@@ -11,7 +11,7 @@ git pull
 echo ---------------------------------------------
 echo             delete old container
 echo ---------------------------------------------
-docker rm -f baoleme-server
+docker rm -f baoleme-server || true
 echo ---------------------------------------------
 echo              start new container
 echo ---------------------------------------------
