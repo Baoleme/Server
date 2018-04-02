@@ -1,10 +1,18 @@
 language: node_js
 node_js:
-  - '9'
+- '9'
 install: npm install
 script: npm test
+#addons:
+#  ssh_known_hosts: 119.29.252.110
+
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_57510f08f3ae_key -iv $encrypted_57510f08f3ae_iv
+  -in deploy_rsa.enc -out deploy_rsa -d
+
 deploy:
   provider: script
   script: bash script/deploy.sh
+  skip_cleanup: true
   on:
     all_branches: true
