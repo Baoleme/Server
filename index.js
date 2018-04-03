@@ -3,7 +3,8 @@ const app = new Koa();
 const log = require('./lib/log');
 const sessionConfig = require('./config/session');
 const redisConfig = require('./config/redis');
-const isDev = process.env.NODE_ENV !== 'production';
+const isDev = process.env.NODE_ENV === 'development';
+const redisStore = require('koa-redis')(redisConfig);
 
 // 将所有错误转为JSON的统一格式
 app.use(async (ctx, next) => {
@@ -35,7 +36,7 @@ app.use(require('@koa/cors')({
 app.keys = sessionConfig.cookieKey;
 app.use(require('koa-session')({
   ...sessionConfig,
-  store: require('koa-redis')(redisConfig)
+  store: redisStore
 }, app));
 
 app.use(require('koa-bodyparser')());
@@ -52,5 +53,10 @@ app.on('error', (err, ctx) => {
   }
 });
 
-app.listen(process.env.PORT || 8520);
 process.on('unhandledRejection', (reason) => log.error(reason));
+const server = app.listen(process.env.PORT || 8520);
+exports.end = () => {
+  server.close();
+  redisStore.end();
+  require('./lib/db').pool.end();
+};
