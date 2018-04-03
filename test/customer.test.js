@@ -31,12 +31,6 @@ describe('Customer Account', async function () {
       process.env.NODE_ENV = 'test';
     });
 
-    it('Rigist and login', async function () {
-      await ax.post('/customer/session', {
-        code: 'xxxxxx'
-      });
-    });
-
     it('Rigist', async function () {
       await ax.post('/customer/session', {
         code: 'xxxxxx'
