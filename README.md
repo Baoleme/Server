@@ -22,6 +22,15 @@ log.info('I want to show something', {
   foo: 'bar'
 });
 ```
+
+```js
+// 在拥有Koa上下文的环境中也可以直接使用
+ctx.log.xxx(message, meta);
+
+// true
+ctx.log === require('lib/log');
+```
+
 1. `INFO`等级以上的log会是输出到`logs`文件夹。
 2. 开发环境下，任何等级的log都会输出到标准输出。
 3. 在任何中间件中如果出现的`Error`，本次请求的上下文和错误信息会自动被`log.error`记录。
@@ -43,4 +52,12 @@ if (false) {
   error.expose = true;
   throw error;
 }
+```
+
+```js
+// 在拥有Koa上下文的环境中也可以直接使用
+ctx.assert(condition, message);
+
+// true
+ctx.assert === require('lib/assert');
 ```

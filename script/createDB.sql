@@ -7,6 +7,7 @@ use baoleme;
 CREATE TABLE restaurant (
   `restaurant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(50) NOT NULL,
+  `confirm_email` BOOLEAN NOT NULL DEFAULT FALSE,
   `password` VARCHAR(50) NOT NULL,
   `name` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`restaurant_id`),
@@ -14,5 +15,8 @@ CREATE TABLE restaurant (
 );
 
 CREATE TABLE customer (
-  `customer_id` INT UNSIGNED NOT NULL AUTO_INCREMENT
-)
+  `customer_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `openid` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`customer_id`),
+  UNIQUE (`openid`)
+);
