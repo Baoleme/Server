@@ -20,7 +20,11 @@ exports.getById = async restaurant_id => {
     FROM restaurant
     WHERE restaurant_id = ?
   `;
-  return (await query(sql, [restaurant_id]))[0];
+  const [data] = await query(sql, [restaurant_id]);
+  if (data) {
+    data.confirm_email = Boolean(data.confirm_email);
+  }
+  return data;
 };
 
 exports.getIdAndiePasswordByEmail = async email => {

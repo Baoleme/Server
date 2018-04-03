@@ -5,7 +5,9 @@ const systemConfig = require('../../config/system');
 const mailConfig = require('../../config/mail');
 const crypto = require('crypto');
 
-exports.create = restaurant => {
+exports.create = async restaurant => {
+  const exist = await restaurantModel.getIdAndiePasswordByEmail(restaurant.email);
+  assert(!exist, '邮箱已经被使用');
   return restaurantModel.create(restaurant);
 };
 
@@ -21,7 +23,7 @@ exports.getInformationById = restaurant_id => {
 
 exports.sendConfirmEmail = async restaurant_id => {
   const restaurant = await exports.getInformationById(restaurant_id);
-  assert(!restaurant.confirm_email, '邮箱已经确认');
+  assert(!restaurant.confirm_email, '邮箱已经确认，无需再次确认');
   const cipher = encipher(`${restaurant_id}|${new Date().getTime()}`);
   await mail(restaurant.email, '饱了么注册邮箱确认', `<a href="${systemConfig.apiUrl}/auth?cipher=${cipher}">认证链接</a>`);
 };
@@ -40,13 +42,13 @@ exports.emailConfirm = async cipher => {
   });
 };
 
-function encipher(raw) {
+function encipher (raw) {
   const cipher = crypto.createCipher('aes192', mailConfig.cipherKey);
   let encrypted = cipher.update(raw);
   return encrypted + cipher.final('hex');
 }
 
-function decipher(encrypted) {
+function decipher (encrypted) {
   const decipher = crypto.createDecipher('aes192', mailConfig.cipherKey);
   let decrypted = decipher.update(encrypted, 'hex', 'utf8');
   decrypted += decipher.final('utf8');

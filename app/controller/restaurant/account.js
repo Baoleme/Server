@@ -3,12 +3,12 @@ const restaurantService = require('../../service/restaurant');
 exports.create = async ctx => {
   const { email, name, password } = ctx.request.body;
   ctx.verify(
-    { data: email, type: 'string', message: 'invalid email' },
-    { data: name, type: 'string', maxLength: 50, message: 'invalid name' },
-    { data: password, type: 'string', message: 'invalid password' }
+    { data: email, type: 'string', message: 'email格式不正确' },
+    { data: name, type: 'string', maxLength: 50, message: 'name格式不正确' },
+    { data: password, type: 'string', message: 'password格式不正确' }
   );
-  ctx.assert(/.+@.+\..+/.test(email), 'invalid email');
-  ctx.assert(/[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}/.test(password), 'invalid password');
+  ctx.assert(/^.+@.+\..+$/.test(email), 'email格式不正确');
+  ctx.assert(/^[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}$/.test(password), 'password格式不正确');
   await restaurantService.create({
     email,
     name,
@@ -20,11 +20,11 @@ exports.create = async ctx => {
 exports.login = async ctx => {
   const { email, password } = ctx.request.body;
   ctx.verify(
-    { data: email, type: 'string', message: 'invalid email' },
-    { data: password, type: 'string', message: 'invalid password' }
+    { data: email, type: 'string', message: 'email格式不正确' },
+    { data: password, type: 'string', message: 'password格式不正确' }
   );
-  ctx.assert(/.+@.+\..+/.test(email), 'invalid email');
-  ctx.assert(/[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}/.test(password), 'invalid password');
+  ctx.assert(/^.+@.+\..+$/.test(email), 'email格式不正确');
+  ctx.assert(/^[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}$/.test(password), 'password格式不正确');
   ctx.body = await restaurantService.login(email, password);
   ctx.session.restaurant_id = ctx.body.restaurant_id;
 };
@@ -45,7 +45,7 @@ exports.sendConfirmEmail = async ctx => {
 
 exports.emailConfirm = async ctx => {
   const { cipher } = ctx.request.body;
-  ctx.verify({ data: cipher, type: 'string', message: 'invalid cipher' });
+  ctx.verify({ data: cipher, type: 'string', message: 'cipher格式不正确' });
   await restaurantService.emailConfirm(cipher);
   ctx.status = 200;
 };

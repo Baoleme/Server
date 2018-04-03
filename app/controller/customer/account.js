@@ -6,7 +6,7 @@ exports.getSelfInformation = async ctx => {
 
 exports.login = async ctx => {
   const { code } = ctx.request.body;
-  ctx.verify({ data: code, type: 'string', message: 'invalid code' });
+  ctx.verify({ data: code, type: 'string', message: 'code格式不正确' });
   let customer;
   try {
     customer = await customerService.login(code);
