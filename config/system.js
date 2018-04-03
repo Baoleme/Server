@@ -1,3 +1,4 @@
+const isTest = process.env.NODE_ENV === 'test';
 module.exports = {
-  apiUrl: 'http://api.baoleme.andiedie.com'
+  apiUrl: isTest ? 'http://localhost:8520' : 'https://api.baoleme.andiedie.cn'
 };

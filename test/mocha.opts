@@ -1,0 +1,5 @@
+--require intelli-espower-loader
+--recursive
+-t 10000
+--require index.js
+test/**/*test.js

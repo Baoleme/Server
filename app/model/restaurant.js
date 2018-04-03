@@ -47,7 +47,7 @@ exports.update = async (restaurant_id, options) => {
     data.push(options[key]);
   }
   sql = sql.substr(0, sql.length - 1);
-  sql += ' WHERE user_id = ?';
+  sql += ' WHERE restaurant_id = ?';
   data.push(restaurant_id);
   return query(sql, data);
 };

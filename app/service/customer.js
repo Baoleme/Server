@@ -21,6 +21,7 @@ exports.getInformationById = async customer_id => {
 };
 
 async function getOpenidByCode (code) {
+  if (process.env.NODE_ENV === 'test') return code;
   let openid;
   try {
     const { data } = await axios.get('https://api.weixin.qq.com/sns/jscode2session', {

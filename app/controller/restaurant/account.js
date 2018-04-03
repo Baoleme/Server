@@ -25,8 +25,8 @@ exports.login = async ctx => {
   );
   ctx.assert(/^.+@.+\..+$/.test(email), 'email格式不正确');
   ctx.assert(/^[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}$/.test(password), 'password格式不正确');
-  ctx.body = await restaurantService.login(email, password);
-  ctx.session.restaurant_id = ctx.body.restaurant_id;
+  ctx.session.restaurant_id = await restaurantService.login(email, password);
+  ctx.status = 200;
 };
 
 exports.logout = ctx => {
@@ -44,7 +44,7 @@ exports.sendConfirmEmail = async ctx => {
 };
 
 exports.emailConfirm = async ctx => {
-  const { cipher } = ctx.request.body;
+  const { cipher } = ctx.query;
   ctx.verify({ data: cipher, type: 'string', message: 'cipher格式不正确' });
   await restaurantService.emailConfirm(cipher);
   ctx.status = 200;

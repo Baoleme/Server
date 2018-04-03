@@ -1,13 +1,13 @@
 module.exports = {
-  host: 'smtp.mail.com',
+  host: 'smtp.exmail.qq.com',
   port: 465,
   secure: true,
   auth: {
-    user: 'baoleme@mail.com',
-    pass: 'baolemeemail'
+    user: 'baoleme@andiedie.cn',
+    pass: 'Bao1le2me3'
   },
-  from: '饱了么<baoleme@mail.com>',
+  from: '饱了么<baoleme@andiedie.cn>',
   cipherKey: 'baolemeEmailConfirm',
   // 确认链接有效时间，10分钟
-  confirmLinkMaxage: 10 * 60 * 1000
+  confirmLinkMaxage: 10
 };
