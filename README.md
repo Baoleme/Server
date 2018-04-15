@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Baoleme/Server.svg?branch=master)](https://travis-ci.org/Baoleme/Server)
+[![Build Status](https://travis-ci.org/Baoleme/Server.svg?branch=master)](https://travis-ci.org/Baoleme/Server) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 # 启动
 服务器监听8520端口

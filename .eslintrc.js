@@ -15,11 +15,9 @@ module.exports = {
     'space-before-function-paren': ['warn', 'always'],
     'object-curly-spacing': ['warn', 'always'],
     // allow paren-less arrow functions
-    'arrow-parens': 0,
-    // allow async-await
-    'generator-star-spacing': 0,
+    'arrow-parens': ["error", "as-needed"],
     // no console
-    'no-console': 2,
-    'camelcase': 0
+    'no-console': 'warn',
+    'camelcase': 'never'
   }
 };
