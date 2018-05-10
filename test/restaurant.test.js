@@ -185,7 +185,7 @@ describe('Restaurant Account', async function () {
       );
     });
     it('With right cipher', async function () {
-      const link = require('../app/service/restaurant').getLastLink();
+      const link = require('../app/service/restaurantAccount').getLastLink();
       await ax.get(link);
       const { data } = await ax.get('/restaurant/self');
       assert.deepStrictEqual(data, {
@@ -205,7 +205,7 @@ describe('Restaurant Account', async function () {
       );
     });
     it('Duplicated confirming', async function () {
-      const link = require('../app/service/restaurant').getLastLink();
+      const link = require('../app/service/restaurantAccount').getLastLink();
       await throws(
         () => ax.get(link),
         ({ response: r }) => r.status === 400 && r.data.message === '邮箱已经激活，请勿重复操作'

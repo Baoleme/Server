@@ -1,4 +1,4 @@
-const restaurantService = require('../../service/restaurant');
+const restaurantService = require('../service/restaurantAccount');
 
 exports.create = async ctx => {
   const { email, name, password } = ctx.request.body;

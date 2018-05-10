@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const router = new Router();
-const ctrl = require('../../controller/restaurant/account');
-const authorize = require('../../../lib/authorize');
+const ctrl = require('../controller/restaurantAccount');
+const authorize = require('../../lib/authorize');
 
 router.post('/restaurant', ctrl.create);
 router.post('/restaurant/session', ctrl.login);

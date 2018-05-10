@@ -1,4 +1,4 @@
-const customerService = require('../../service/customer');
+const customerService = require('../service/customerAccount');
 
 exports.getSelfInformation = async ctx => {
   ctx.body = await customerService.getInformationById(ctx.session.customer_id);
