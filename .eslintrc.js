@@ -18,6 +18,6 @@ module.exports = {
     'arrow-parens': ["error", "as-needed"],
     // no console
     'no-console': 'warn',
-    'camelcase': 'never'
+    'camelcase': 0
   }
 };

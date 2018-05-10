@@ -2,7 +2,7 @@ const { query } = require('../../lib/db');
 
 exports.create = customer => {
   const sql = `
-    INSERT INTO customer
+    INSERT INTO Customer
     (openid)
     VALUES
     (?)
@@ -15,7 +15,7 @@ async function getByField (field, value) {
     SELECT
     customer_id,
     openid
-    FROM customer
+    FROM Customer
     WHERE ?? = ?
   `;
   return (await query(sql, [field, value]))[0];

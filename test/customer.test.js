@@ -5,10 +5,12 @@ const db = require('../lib/db');
 
 describe('Customer Account', async function () {
   before(async () => {
-    await db.transaction(async (query) => {
+    await db.transaction(async query => {
       const tables = await query('SHOW TABLES');
       for (const table of tables) {
-        await query('TRUNCATE TABLE ??', [Object.values(table)[0]]);
+        const tableName = [Object.values(table)[0]];
+        await query('DELETE FROM ??', tableName);
+        await query('ALTER TABLE ?? AUTO_INCREMENT = 1', tableName);
       }
     });
   });
@@ -56,7 +58,7 @@ describe('Customer Account', async function () {
     it('Get before login', async function () {
       await throws(
         () => ax.get('/customer/self'),
-        ({ response: r }) => r.status === 400 && r.data.message === '请先登录'
+        ({ response: r }) => r.status === 400 && r.data.message === '请先登录客户账号'
       );
     });
 

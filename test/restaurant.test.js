@@ -7,10 +7,12 @@ const testEmail = 'zchangan@163.com';
 
 describe('Restaurant Account', async function () {
   before(async () => {
-    await db.transaction(async (query) => {
+    await db.transaction(async query => {
       const tables = await query('SHOW TABLES');
       for (const table of tables) {
-        await query('TRUNCATE TABLE ??', [Object.values(table)[0]]);
+        const tableName = [Object.values(table)[0]];
+        await query('DELETE FROM ??', tableName);
+        await query('ALTER TABLE ?? AUTO_INCREMENT = 1', tableName);
       }
     });
   });
@@ -54,12 +56,12 @@ describe('Restaurant Account', async function () {
     it('Name validation', async function () {
       await ax.post('/restaurant', {
         email: '2@test.com',
-        name: '1'.repeat(50),
+        name: '1'.repeat(45),
         password: '~!@#$%'
       });
       await throws(() => ax.post('/restaurant', {
         email: '3@test.com',
-        name: '1'.repeat(51),
+        name: '1'.repeat(46),
         password: '~!@#$%'
       }), ({ response: r }) => r.status === 400 && r.data.message === 'name格式不正确');
       await throws(() => ax.post('/restaurant', {
@@ -130,7 +132,7 @@ describe('Restaurant Account', async function () {
       await ax.delete('/restaurant/session');
       await throws(
         () => ax.get('/restaurant/self'),
-        ({ response: r }) => r.status === 400 && r.data.message === '请先登录'
+        ({ response: r }) => r.status === 400 && r.data.message === '请先登录餐厅账号'
       );
     });
     it('Get after login', async function () {
@@ -153,7 +155,7 @@ describe('Restaurant Account', async function () {
       await ax.delete('/restaurant/session');
       await throws(
         () => ax.post('/restaurant/emailConfirm'),
-        ({ response: r }) => r.status === 400 && r.data.message === '请先登录'
+        ({ response: r }) => r.status === 400 && r.data.message === '请先登录餐厅账号'
       );
     });
     it('Send after login', async function () {

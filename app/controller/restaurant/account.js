@@ -4,7 +4,7 @@ exports.create = async ctx => {
   const { email, name, password } = ctx.request.body;
   ctx.verify(
     { data: email, type: 'string', message: 'email格式不正确' },
-    { data: name, type: 'string', maxLength: 50, message: 'name格式不正确' },
+    { data: name, type: 'string', maxLength: 45, message: 'name格式不正确' },
     { data: password, type: 'string', message: 'password格式不正确' }
   );
   ctx.assert(/^.+@.+\..+$/.test(email), 'email格式不正确');
