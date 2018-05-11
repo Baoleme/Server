@@ -162,10 +162,14 @@ describe('Restaurant Account', async function () {
       });
       const { data } = await ax.get('/restaurant/self');
       assert.deepStrictEqual(data, {
-        restaurant_id: 3,
-        email: '3@test.com',
         confirm_email: false,
-        name: '1'
+        description: null,
+        email: '3@test.com',
+        license_url: 'http://localhost:8520/files/3@test.com/license.docx',
+        logo_url: 'https://api.baoleme.andiedie.cn/files/default-logo.png',
+        name: '1',
+        phone: null,
+        restaurant_id: 3
       });
     });
   });
@@ -212,7 +216,11 @@ describe('Restaurant Account', async function () {
         restaurant_id: 1,
         email: testEmail,
         confirm_email: true,
-        name: '1'
+        name: '1',
+        description: null,
+        license_url: `http://localhost:8520/files/${testEmail}/license.docx`,
+        logo_url: 'https://api.baoleme.andiedie.cn/files/default-logo.png',
+        phone: null
       });
     });
   });

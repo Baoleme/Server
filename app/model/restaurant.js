@@ -16,7 +16,11 @@ exports.getById = async restaurant_id => {
     restaurant_id,
     email,
     confirm_email,
-    name
+    name,
+    logo_url,
+    description,
+    phone,
+    license_url
     FROM Restaurant
     WHERE restaurant_id = ?
   `;
