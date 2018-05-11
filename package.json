@@ -42,6 +42,7 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.1.0",
+    "form-data": "^2.3.2",
     "intelli-espower-loader": "^1.0.1",
     "koa-morgan": "^1.0.1",
     "mocha": "^5.1.1",

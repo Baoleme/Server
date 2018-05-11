@@ -53,7 +53,7 @@ app.on('error', (err, ctx) => {
   }
 });
 
-process.on('unhandledRejection', (reason) => log.error(reason));
+process.on('unhandledRejection', reason => log.error(reason));
 const server = app.listen(process.env.PORT || 8520);
 exports.end = () => {
   server.close();

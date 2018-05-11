@@ -33,7 +33,7 @@ describe('Customer Account', async function () {
       process.env.NODE_ENV = 'test';
     });
 
-    it('Rigist', async function () {
+    it('Rigist code', async function () {
       await ax.post('/customer/session', {
         code: 'xxxxxx'
       });

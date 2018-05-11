@@ -1,5 +1,6 @@
 const { throws } = require('./asyncAssert');
 const assert = require('assert');
+const FormData = require('form-data');
 const ax = require('./ax')();
 const db = require('../lib/db');
 const server = require('../index');
@@ -17,75 +18,94 @@ describe('Restaurant Account', async function () {
     });
   });
   describe('Register', async function () {
+    const regist = async info => {
+      const form = new FormData();
+      if (info.email) form.append('email', info.email);
+      if (info.name) form.append('name', info.name);
+      if (info.password) form.append('password', info.password);
+      if (info.license) form.append('license', info.license, 'a.docx');
+      return ax.post('/restaurant', form, {
+        headers: form.getHeaders()
+      });
+    };
     it('Missing field', async function () {
-      await throws(() => ax.post('/restaurant', {
+      await throws(() => regist({
         name: 'testName',
         password: '~!@#$%'
       }), ({ response: r }) => r.status === 400 && r.data.message === 'email格式不正确');
-      await throws(() => ax.post('/restaurant', {
+      await throws(() => regist({
         email: 'test@test.com',
         password: '~!@#$%'
       }), ({ response: r }) => r.status === 400 && r.data.message === 'name格式不正确');
-      await throws(() => ax.post('/restaurant', {
+      await throws(() => regist({
         email: 'test@test.com',
         name: 'testName'
       }), ({ response: r }) => r.status === 400 && r.data.message === 'password格式不正确');
     });
 
     it('Email validation', async function () {
-      await ax.post('/restaurant', {
+      await regist({
         email: testEmail,
         name: '1',
-        password: '123456'
+        password: '123456',
+        license: '123'
       });
-      await throws(() => ax.post('/restaurant', {
+      await throws(() => regist({
         email: '@',
         name: '1',
-        password: '~!@#$%'
+        password: '~!@#$%',
+        license: '123'
       }), ({ response: r }) => r.status === 400 && r.data.message === 'email格式不正确');
     });
 
     it('Email uniqueness', async function () {
-      await throws(() => ax.post('/restaurant', {
+      await throws(() => regist({
         email: testEmail,
         name: '1',
-        password: '~!@#$%'
+        password: '~!@#$%',
+        license: '123'
       }), ({ response: r }) => r.status === 400 && r.data.message === '邮箱已经被使用');
     });
 
     it('Name validation', async function () {
-      await ax.post('/restaurant', {
+      await regist({
         email: '2@test.com',
         name: '1'.repeat(45),
-        password: '~!@#$%'
+        password: '~!@#$%',
+        license: '123'
       });
-      await throws(() => ax.post('/restaurant', {
+      await throws(() => regist({
         email: '3@test.com',
         name: '1'.repeat(46),
-        password: '~!@#$%'
+        password: '~!@#$%',
+        license: '123'
       }), ({ response: r }) => r.status === 400 && r.data.message === 'name格式不正确');
-      await throws(() => ax.post('/restaurant', {
+      await throws(() => regist({
         email: '3@test.com',
         name: '',
-        password: '~!@#$%'
+        password: '~!@#$%',
+        license: '123'
       }), ({ response: r }) => r.status === 400 && r.data.message === 'name格式不正确');
     });
 
     it('Password validation', async function () {
-      await ax.post('/restaurant', {
+      await regist({
         email: '3@test.com',
         name: '1',
-        password: '\\<>}{?'
+        password: '\\<>}{?',
+        license: '123'
       });
-      await throws(() => ax.post('/restaurant', {
+      await throws(() => regist({
         email: '4@test.com',
         name: '1',
-        password: '\\'
+        password: '\\',
+        license: '123'
       }), ({ response: r }) => r.status === 400 && r.data.message === 'password格式不正确');
-      await throws(() => ax.post('/restaurant', {
+      await throws(() => regist({
         email: '4@test.com',
         name: '1',
-        password: '0'.repeat(33)
+        password: '0'.repeat(33),
+        license: '123'
       }), ({ response: r }) => r.status === 400 && r.data.message === 'password格式不正确');
     });
   });

@@ -18,7 +18,7 @@ exports.create = async ctx => {
   ctx.assert(/^.+@.+\..+$/.test(email), 'email格式不正确');
   ctx.assert(/^[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}$/.test(password), 'password格式不正确');
   const file = files.find(value => value.fieldname === 'license');
-  ctx.assert(file || file.fieldname !== 'license', '缺少license');
+  ctx.assert(file, '缺少license');
   ctx.assert(allowMimeType.includes(file.mimeType), 'license只允许docx、doc和pdf格式');
 
   await restaurantService.create({
