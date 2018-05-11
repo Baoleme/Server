@@ -3,11 +3,11 @@ const { query } = require('../../lib/db');
 exports.create = restaurant => {
   const sql = `
     INSERT INTO Restaurant
-    (email, name, password)
+    (email, name, password, license_url)
     VALUES
-    (?, ?, ?)
+    (?, ?, ?, ?)
   `;
-  return query(sql, [restaurant.email, restaurant.name, restaurant.password]);
+  return query(sql, [restaurant.email, restaurant.name, restaurant.password, restaurant.license_url]);
 };
 
 exports.getById = async restaurant_id => {
@@ -27,7 +27,7 @@ exports.getById = async restaurant_id => {
   return data;
 };
 
-exports.getIdAndiePasswordByEmail = async email => {
+exports.getIdAndPasswordByEmail = async email => {
   const sql = `
     SELECT
     restaurant_id,

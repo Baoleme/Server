@@ -1,7 +1,15 @@
+const busboy = require('async-busboy');
 const restaurantService = require('../service/restaurantAccount');
 
+const allowMimeType = [
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/msword',
+  'application/pdf'
+];
+
 exports.create = async ctx => {
-  const { email, name, password } = ctx.request.body;
+  const { files, fields } = await busboy(ctx.req);
+  const { email, name, password } = fields;
   ctx.verify(
     { data: email, type: 'string', message: 'email格式不正确' },
     { data: name, type: 'string', maxLength: 45, message: 'name格式不正确' },
@@ -9,10 +17,15 @@ exports.create = async ctx => {
   );
   ctx.assert(/^.+@.+\..+$/.test(email), 'email格式不正确');
   ctx.assert(/^[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}$/.test(password), 'password格式不正确');
+  const file = files.find(value => value.fieldname === 'license');
+  ctx.assert(file || file.fieldname !== 'license', '缺少license');
+  ctx.assert(allowMimeType.includes(file.mimeType), 'license只允许docx、doc和pdf格式');
+
   await restaurantService.create({
     email,
     name,
-    password
+    password,
+    file
   });
   ctx.status = 200;
 };

@@ -4,20 +4,25 @@ const mail = require('../../lib/mail');
 const systemConfig = require('../../config/system');
 const mailConfig = require('../../config/mail');
 const crypto = require('crypto');
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 
 const isTest = process.env.NODE_ENV === 'test';
 let lastLink = null;
 
 exports.create = async restaurant => {
-  const exist = await restaurantModel.getIdAndiePasswordByEmail(restaurant.email);
+  const exist = await restaurantModel.getIdAndPasswordByEmail(restaurant.email);
   assert(!exist, '邮箱已经被使用');
+  const extname = path.extname(restaurant.file.filename);
+  const destPath = path.resolve(systemConfig.fileDir, restaurant.email, 'license' + extname);
+  fs.ensureDirSync(path.dirname(destPath));
+  restaurant.file.pipe(fs.createWriteStream(destPath));
+  restaurant.license_url = `${systemConfig.apiUrl}/files/${restaurant.email}/license${extname}`;
   return restaurantModel.create(restaurant);
 };
 
 exports.login = async (email, password) => {
-  const restaurant = await restaurantModel.getIdAndiePasswordByEmail(email);
+  const restaurant = await restaurantModel.getIdAndPasswordByEmail(email);
   assert(restaurant && password === restaurant.password, '用户名或密码错误');
   return restaurant.restaurant_id;
 };
