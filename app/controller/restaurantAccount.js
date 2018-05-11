@@ -1,5 +1,5 @@
 const busboy = require('async-busboy');
-const restaurantService = require('../service/restaurantAccount');
+const rAccountService = require('../service/restaurantAccount');
 
 const allowMimeType = [
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -21,7 +21,7 @@ exports.create = async ctx => {
   ctx.assert(file, '缺少license');
   ctx.assert(allowMimeType.includes(file.mimeType), 'license只允许docx、doc和pdf格式');
 
-  await restaurantService.create({
+  await rAccountService.create({
     email,
     name,
     password,
@@ -38,7 +38,7 @@ exports.login = async ctx => {
   );
   ctx.assert(/^.+@.+\..+$/.test(email), 'email格式不正确');
   ctx.assert(/^[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}$/.test(password), 'password格式不正确');
-  ctx.session.restaurant_id = await restaurantService.login(email, password);
+  ctx.session.restaurant_id = await rAccountService.login(email, password);
   ctx.status = 200;
 };
 
@@ -48,18 +48,18 @@ exports.logout = ctx => {
 };
 
 exports.getSelfInformation = async ctx => {
-  ctx.body = await restaurantService.getInformationById(ctx.session.restaurant_id);
+  ctx.body = await rAccountService.getInformationById(ctx.session.restaurant_id);
 };
 
 exports.sendConfirmEmail = async ctx => {
-  await restaurantService.sendConfirmEmail(ctx.session.restaurant_id);
+  await rAccountService.sendConfirmEmail(ctx.session.restaurant_id);
   ctx.status = 200;
 };
 
 exports.emailConfirm = async ctx => {
   const { cipher, onSuccess } = ctx.query;
   ctx.verify({ data: cipher, type: 'string', message: 'cipher格式不正确' });
-  await restaurantService.emailConfirm(cipher);
+  await rAccountService.emailConfirm(cipher);
   if (onSuccess) ctx.redirect(onSuccess);
   else ctx.body = '邮箱已确认';
 };
