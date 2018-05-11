@@ -57,8 +57,9 @@ exports.sendConfirmEmail = async ctx => {
 };
 
 exports.emailConfirm = async ctx => {
-  const { cipher } = ctx.query;
+  const { cipher, onSuccess } = ctx.query;
   ctx.verify({ data: cipher, type: 'string', message: 'cipher格式不正确' });
   await restaurantService.emailConfirm(cipher);
-  ctx.status = 200;
+  if (onSuccess) ctx.redirect(onSuccess);
+  else ctx.body = '邮箱已确认';
 };
