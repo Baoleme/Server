@@ -3,12 +3,14 @@ const categoryService = require('./category');
 const assert = require('../../lib/assert');
 const _ = require('lodash');
 
-exports.getSelfDish = async ctx => {
+exports.getSelfDish = async () => {
 
 };
 
-exports.createDish = async info => {
-  assert(await categoryService.exist(info.category_id), '分类不存在');
+exports.createDish = async (restaurant_id, info) => {
+  const category = await categoryService.getOne(info.category_id);
+  assert(category, '分类不存在');
+  assert(category.restaurant_id === restaurant_id, '这个分类不属于你');
   const dish = {
     category_id: info.category_id,
     name: info.name,
@@ -21,19 +23,30 @@ exports.createDish = async info => {
   await dishModel.createDish(dish);
 };
 
-exports.updateDish = async (id, info) => {
-  assert(await exports.exist(id), '菜品不存在');
-  if (info.category_id) assert(await categoryService.exist(info.category_id), '分类不存在');
+exports.updateDish = async (restaurant_id, dish_id, info) => {
+  assert(await exports.exist(dish_id), '菜品不存在');
+  if (info.category_id) {
+    const category = await categoryService.getOne(info.category_id);
+    assert(category, '分类不存在');
+    assert(category.restaurant_id === restaurant_id, '这个分类不属于你');
+  }
   const dish = _.pick(info, ['category_id', 'name', 'price']);
   const otherFields = _.mapValues(_.pick(info, ['specifications', 'image_urls', 'description', 'tag']), JSON.stringify);
   Object.assign(dish, otherFields);
-  await dishModel.updateDish(id, dish);
+  await dishModel.updateDish(dish_id, dish);
 };
 
-exports.deleteDish = async id => {
+exports.deleteDish = async (restaurant_id, id) => {
+  const dish = await dishModel.getOne(id);
+  const category = await categoryService.getOne(dish.category_id);
+  assert(category.restaurant_id === restaurant_id, '这个菜品不属于你');
   await dishModel.deleteDish(id);
 };
 
 exports.exist = async id => {
   return Boolean(await dishModel.getOne(id));
+};
+
+exports.getOne = async id => {
+  return dishModel.getOne(id);
 };

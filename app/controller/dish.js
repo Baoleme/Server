@@ -3,13 +3,13 @@ const verify = require('../../lib/verify');
 const _ = require('lodash');
 
 exports.getSelfDish = async ctx => {
-
+  ctx.body = await dishService.getSelfDish(ctx.session.restaurant_id);
 };
 
 exports.createDish = async ctx => {
   const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_urls', 'description', 'tag']);
   ctx.verify(
-    { data: info.category_id, type: 'positive-string', message: 'category_id格式不正确' },
+    { data: Number(info.category_id), type: 'positive', message: 'category_id格式不正确' },
     { data: info.name, type: 'string', maxLength: 45, message: 'name格式不正确' },
     { data: info.price, type: 'number', message: 'price格式不正确' },
     { data: info.specifications, type: 'array', require: false, message: 'specifications格式不正确' },
@@ -17,17 +17,18 @@ exports.createDish = async ctx => {
     { data: info.description, type: 'string', require: false, message: 'description格式不正确' },
     { data: info.tag, type: 'string-array', require: false, message: 'tag格式不正确' }
   );
-  if (info.specifications) checkSpecifications(info.specifications);
+  if (info.specifications) checkSpecifications(ctx.session.restaurant_id, info.specifications);
   await dishService.createDish(info);
   ctx.status = 200;
 };
 
 exports.updateDish = async ctx => {
   const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_urls', 'description', 'tag']);
-  const { id } = ctx.params;
+  const { id: dish_id } = ctx.params;
+  if (info.category_id) info.category_id = Number(info.category_id);
   ctx.verify(
-    { data: id, type: 'positive-string', message: 'id格式不正确' },
-    { data: info.category_id, type: 'positive-string', require: false, message: 'category_id格式不正确' },
+    { data: Number(dish_id), type: 'positive', message: 'id格式不正确' },
+    { data: info.category_id, type: 'positive', require: false, message: 'category_id格式不正确' },
     { data: info.name, type: 'string', maxLength: 45, require: false, message: 'name格式不正确' },
     { data: info.price, type: 'number', require: false, message: 'price格式不正确' },
     { data: info.specifications, type: 'array', require: false, message: 'specifications格式不正确' },
@@ -36,14 +37,14 @@ exports.updateDish = async ctx => {
     { data: info.tag, type: 'string-array', require: false, message: 'tag格式不正确' }
   );
   if (info.specifications) checkSpecifications(info.specifications);
-  if (_.keys(info).length) await dishService.updateDish(id, info);
+  if (_.keys(info).length) await dishService.updateDish(ctx.session.restaurant_id, dish_id, info);
   ctx.status = 200;
 };
 
 exports.deleteDish = async ctx => {
-  const { id } = ctx.params;
-  ctx.verify({ data: id, type: 'positive-string', message: 'id格式不正确' });
-  await dishService.deleteDish(id);
+  const { id: dish_id } = ctx.params;
+  ctx.verify({ data: Number(dish_id), type: 'positive', message: 'id格式不正确' });
+  await dishService.deleteDish(ctx.session.restaurant_id, dish_id);
   ctx.status = 200;
 };
 

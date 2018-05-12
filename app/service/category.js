@@ -21,3 +21,7 @@ exports.dumpTo = async (from, to) => {
 exports.exist = async id => {
   return Boolean(await categoryModel.getOne(id));
 };
+
+exports.getOne = async id => {
+  return categoryModel.getOne(id);
+};
