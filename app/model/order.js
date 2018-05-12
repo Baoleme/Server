@@ -4,7 +4,7 @@ const _ = require('lodash');
 exports.ORDER_STATE = {
   CREATED: 'created',
   PAID: 'paid',
-  ACCEPTED: 'accpted',
+  ACCEPTED: 'accepted',
   CANCELLED: 'canelled',
   COMPLETED: 'completed'
 };

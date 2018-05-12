@@ -3,6 +3,7 @@ const restaurantService = require('./restaurantAccount');
 const tableService = require('./table');
 const dishService = require('./dish');
 const assert = require('../../lib/assert');
+const _ = require('lodash');
 
 exports.createOrder = async (customer_id, info) => {
   // 确认餐厅和桌子存在
@@ -84,8 +85,14 @@ exports.getRestaurantOrder = async () => {
 
 };
 
-exports.updateOrder = async () => {
-
+exports.updateOrderState = async (id, state) => {
+  assert(await exports.exist(id), '订单不存在');
+  assert([
+    orderModel.ORDER_STATE.ACCEPTED,
+    orderModel.ORDER_STATE.CANCELLED,
+    orderModel.ORDER_STATE.COMPLETED
+  ].includes(state), '状态不合法');
+  await orderModel.updateState(id, state);
 };
 
 exports.getLastState = async order_id => {

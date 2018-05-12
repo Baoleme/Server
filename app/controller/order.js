@@ -33,6 +33,13 @@ exports.getRestaurantOrder = async ctx => {
 
 };
 
-exports.updateOrder = async ctx => {
-
+exports.updateOrderState = async ctx => {
+  const { id } = ctx.params;
+  const { state } = ctx.request.body;
+  ctx.verify(
+    { data: Number(id), type: 'positive', message: 'id格式不正确' },
+    { data: state, type: 'string', message: 'state格式不正确' }
+  );
+  await orderService.updateOrderState(id, state);
+  ctx.status = 200;
 };
