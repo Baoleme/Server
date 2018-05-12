@@ -3,7 +3,6 @@ const restaurantService = require('./restaurantAccount');
 const tableService = require('./table');
 const dishService = require('./dish');
 const assert = require('../../lib/assert');
-const _ = require('lodash');
 
 exports.createOrder = async (customer_id, info) => {
   // 确认餐厅和桌子存在
@@ -73,10 +72,14 @@ exports.getCompleteInfomation = async id => {
   return order;
 };
 
-exports.pay = async id => {
-  assert(await exports.exist(id), '订单不存在');
-  await orderModel.updateState(id, orderModel.ORDER_STATE.PAID);
-  await orderModel.updateOrder(id, {
+exports.pay = async (customer_id, order_id) => {
+  const order = exports.getOne(order_id);
+  assert(order, '订单不存在');
+  assert(order.customer_id === customer_id, '只能支付自己的订单');
+  const oldState = (await orderModel.getState(order_id, 1))[0].state;
+  assert(oldState !== orderModel.ORDER_STATE.CREATED, '无法支付该订单');
+  await orderModel.updateState(order_id, orderModel.ORDER_STATE.PAID);
+  await orderModel.updateOrder(order_id, {
     payment: 'DreamPay'
   });
 };
@@ -85,14 +88,23 @@ exports.getRestaurantOrder = async () => {
 
 };
 
-exports.updateOrderState = async (id, state) => {
-  assert(await exports.exist(id), '订单不存在');
+exports.updateOrderState = async (restaurant_id, order_id, state) => {
+  const order = exports.getOne(order_id);
+  assert(order, '订单不存在');
+  assert(order.restaurant_id === restaurant_id, '只能处理自己的订单');
   assert([
     orderModel.ORDER_STATE.ACCEPTED,
     orderModel.ORDER_STATE.CANCELLED,
     orderModel.ORDER_STATE.COMPLETED
   ].includes(state), '状态不合法');
-  await orderModel.updateState(id, state);
+  const oldState = (await orderModel.getState(order_id, 1))[0].state;
+  if (state === orderModel.ORDER_STATE.ACCEPTED) {
+    assert(oldState === orderModel.ORDER_STATE.PAID, '只能接已支付状态的订单');
+  }
+  if (state === orderModel.ORDER_STATE.COMPLETED) {
+    assert(oldState === orderModel.ORDER_STATE.ACCEPTED, '只能完成已接单的订单');
+  }
+  await orderModel.updateState(order_id, state);
 };
 
 exports.getLastState = async order_id => {

@@ -25,7 +25,7 @@ exports.createOrder = async ctx => {
 exports.pay = async ctx => {
   const { id } = ctx.params;
   ctx.verify({ data: Number(id), type: 'positive', message: 'id格式不正确' });
-  await orderService.pay(id);
+  await orderService.pay(ctx.session.customer_id, id);
   ctx.status = 200;
 };
 
@@ -40,6 +40,6 @@ exports.updateOrderState = async ctx => {
     { data: Number(id), type: 'positive', message: 'id格式不正确' },
     { data: state, type: 'string', message: 'state格式不正确' }
   );
-  await orderService.updateOrderState(id, state);
+  await orderService.updateOrderState(ctx.session.restaurant_id, id, state);
   ctx.status = 200;
 };
