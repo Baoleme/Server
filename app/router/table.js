@@ -3,9 +3,9 @@ const router = new Router();
 const ctrl = require('../controller/table');
 const { onlyCustomer, onlyRestaurant } = require('../../lib/authorize');
 
-router.get('/restaurant/self/table', onlyRestaurant, ctrl.getSelfTable);
+router.get('/table', onlyRestaurant, ctrl.getSelfTable);
 router.get('/restaurant/:id/table', onlyCustomer, ctrl.getRestaurantTable);
-router.post('/restaurant/self/table', onlyRestaurant, ctrl.createTable);
-router.delete('/restaurant/self/table', onlyRestaurant, ctrl.deleteTable);
+router.post('/table', onlyRestaurant, ctrl.createTable);
+router.delete('/table', onlyRestaurant, ctrl.deleteTable);
 
 module.exports = router;

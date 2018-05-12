@@ -1,8 +1,8 @@
 const tableService = require('../service/table');
 
 exports.getRestaurantTable = async ctx => {
-  const id = Number(ctx.params.id);
-  ctx.verify({ data: id, type: 'positive', message: 'id格式不正确' });
+  const id = ctx.params.id;
+  ctx.verify({ data: id, type: 'positive-string', message: 'id格式不正确' });
   ctx.body = await tableService.getAll(id);
 };
 
