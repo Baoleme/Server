@@ -9,7 +9,7 @@ exports.getSelfDish = async ctx => {
 exports.createDish = async ctx => {
   const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_url', 'description', 'tag']);
   ctx.verify(
-    { data: Number(info.category_id), type: 'positive', message: 'category_id格式不正确' },
+    { data: info.category_id, type: 'positive', message: 'category_id格式不正确' },
     { data: info.name, type: 'string', maxLength: 45, message: 'name格式不正确' },
     { data: info.price, type: 'number', message: 'price格式不正确' },
     { data: info.specifications, type: 'array', require: false, message: 'specifications格式不正确' },
@@ -25,7 +25,6 @@ exports.createDish = async ctx => {
 exports.updateDish = async ctx => {
   const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_url', 'description', 'tag']);
   const { id: dish_id } = ctx.params;
-  if (info.category_id) info.category_id = Number(info.category_id);
   ctx.verify(
     { data: Number(dish_id), type: 'positive', message: 'id格式不正确' },
     { data: info.category_id, type: 'positive', require: false, message: 'category_id格式不正确' },

@@ -64,6 +64,14 @@ exports.getLastLink = () => {
   return isTest ? lastLink : null;
 };
 
+exports.exist = async id => {
+  return Boolean(await restaurantModel.getById(id));
+};
+
+exports.getOne = async id => {
+  return restaurantModel.getById(id);
+};
+
 function encipher (raw) {
   const cipher = crypto.createCipher('aes192', mailConfig.cipherKey);
   let encrypted = cipher.update(raw);
