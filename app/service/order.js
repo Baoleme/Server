@@ -73,7 +73,7 @@ exports.getCompleteInfomation = async id => {
 };
 
 exports.pay = async (customer_id, order_id) => {
-  const order = exports.getOne(order_id);
+  const order = await exports.getOne(order_id);
   assert(order, '订单不存在');
   assert(order.customer_id === customer_id, '只能支付自己的订单');
   const oldState = (await orderModel.getState(order_id, 1))[0].state;
@@ -89,7 +89,7 @@ exports.getRestaurantOrder = async () => {
 };
 
 exports.updateOrderState = async (restaurant_id, order_id, state) => {
-  const order = exports.getOne(order_id);
+  const order = await exports.getOne(order_id);
   assert(order, '订单不存在');
   assert(order.restaurant_id === restaurant_id, '只能处理自己的订单');
   assert([
