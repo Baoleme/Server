@@ -6,6 +6,24 @@ const _ = require('lodash');
 exports.getSelfDish = async restaurant_id => {
   const categories = await categoryService.getAll(restaurant_id);
   if (categories.length === 0) return [];
+  const dishes = await dishModel.getAll(restaurant_id);
+  if (dishes.length === 0) return [];
+  dishes.forEach(dish => {
+    dish.specifications = JSON.parse(dish.specifications);
+    dish.image_url = JSON.parse(dish.image_url);
+    dish.tag = JSON.parse(dish.tag);
+  });
+  const group = _.groupBy(dishes, 'category_id');
+  const result = [];
+  for (const category of categories) {
+    result.push({
+      category_id: category.category_id,
+      name: category.name,
+      restaurant_id: category.restaurant_id,
+      dish: group[category.category_id]
+    });
+  }
+  return result;
 };
 
 exports.createDish = async (restaurant_id, info) => {
@@ -19,7 +37,7 @@ exports.createDish = async (restaurant_id, info) => {
     price: info.price
   };
   dish.specifications = info.specifications ? JSON.stringify(info.specifications) : '[]';
-  dish.image_urls = info.image_urls ? JSON.stringify(info.image_urls) : '[]';
+  dish.image_url = info.image_url ? JSON.stringify(info.image_url) : '[]';
   dish.description = info.description || '';
   dish.tag = info.tag ? JSON.stringify(info.tag) : '[]';
   await dishModel.createDish(dish);
@@ -33,7 +51,7 @@ exports.updateDish = async (restaurant_id, dish_id, info) => {
     assert(category.restaurant_id === restaurant_id, '这个分类不属于你');
   }
   const dish = _.pick(info, ['category_id', 'name', 'price']);
-  const otherFields = _.mapValues(_.pick(info, ['specifications', 'image_urls', 'description', 'tag']), JSON.stringify);
+  const otherFields = _.mapValues(_.pick(info, ['specifications', 'image_url', 'description', 'tag']), JSON.stringify);
   Object.assign(dish, otherFields);
   await dishModel.updateDish(dish_id, dish);
 };

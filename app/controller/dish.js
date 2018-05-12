@@ -7,23 +7,23 @@ exports.getSelfDish = async ctx => {
 };
 
 exports.createDish = async ctx => {
-  const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_urls', 'description', 'tag']);
+  const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_url', 'description', 'tag']);
   ctx.verify(
     { data: Number(info.category_id), type: 'positive', message: 'category_id格式不正确' },
     { data: info.name, type: 'string', maxLength: 45, message: 'name格式不正确' },
     { data: info.price, type: 'number', message: 'price格式不正确' },
     { data: info.specifications, type: 'array', require: false, message: 'specifications格式不正确' },
-    { data: info.image_urls, type: 'string-array', require: false, message: 'image_urls格式不正确' },
+    { data: info.image_url, type: 'string-array', require: false, message: 'image_url格式不正确' },
     { data: info.description, type: 'string', require: false, message: 'description格式不正确' },
     { data: info.tag, type: 'string-array', require: false, message: 'tag格式不正确' }
   );
-  if (info.specifications) checkSpecifications(ctx.session.restaurant_id, info.specifications);
-  await dishService.createDish(info);
+  if (info.specifications) checkSpecifications(info.specifications);
+  await dishService.createDish(ctx.session.restaurant_id, info);
   ctx.status = 200;
 };
 
 exports.updateDish = async ctx => {
-  const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_urls', 'description', 'tag']);
+  const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_url', 'description', 'tag']);
   const { id: dish_id } = ctx.params;
   if (info.category_id) info.category_id = Number(info.category_id);
   ctx.verify(
@@ -32,7 +32,7 @@ exports.updateDish = async ctx => {
     { data: info.name, type: 'string', maxLength: 45, require: false, message: 'name格式不正确' },
     { data: info.price, type: 'number', require: false, message: 'price格式不正确' },
     { data: info.specifications, type: 'array', require: false, message: 'specifications格式不正确' },
-    { data: info.image_urls, type: 'string-array', require: false, message: 'image_urls格式不正确' },
+    { data: info.image_url, type: 'string-array', require: false, message: 'image_url格式不正确' },
     { data: info.description, type: 'string', require: false, message: 'description格式不正确' },
     { data: info.tag, type: 'string-array', require: false, message: 'tag格式不正确' }
   );
