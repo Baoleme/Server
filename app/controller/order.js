@@ -18,12 +18,15 @@ exports.createOrder = async ctx => {
       );
     }
   }
-  await orderService.createOrder(ctx.session.customer_id, info);
-  ctx.status = 200;
+  const id = await orderService.createOrder(ctx.session.customer_id, info);
+  ctx.body = await orderService.getCompleteInfomation(id);
 };
 
-exports.deleteDish = async ctx => {
-
+exports.pay = async ctx => {
+  const { id } = ctx.params;
+  ctx.verify({ data: Number(id), type: 'positive', message: 'id格式不正确' });
+  await orderService.pay(id);
+  ctx.status = 200;
 };
 
 exports.getRestaurantOrder = async ctx => {

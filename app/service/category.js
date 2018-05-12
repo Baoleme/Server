@@ -6,14 +6,17 @@ exports.createCategory = async (restaurant_id, name) => {
 };
 
 exports.updateCategory = async (id, name) => {
+  assert(await exports.exist(id), '分类不存在');
   await categoryModel.updateCategory(id, name);
 };
 
 exports.deleteCategory = async id => {
+  assert(await exports.exist(id), '分类不存在');
   await categoryModel.deleteCategory(id);
 };
 
 exports.dumpTo = async (from, to) => {
+  assert(await exports.exist(from), '分类不存在');
   assert(await exports.exist(to), 'dump目标分类不存在');
   await categoryModel.dumpTo(from, to);
 };

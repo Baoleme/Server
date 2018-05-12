@@ -6,7 +6,6 @@ const assert = require('../../lib/assert');
 
 exports.createOrder = async (customer_id, info) => {
   // 确认餐厅和桌子存在
-  assert(await restaurantService.exist(info.restaurant_id), '餐厅不存在');
   const tables = await tableService.getAll(info.restaurant_id);
   assert(tables.includes(info.table), '桌号不存在');
   // 总价格
@@ -53,11 +52,32 @@ exports.createOrder = async (customer_id, info) => {
     dish: JSON.stringify(dishes),
     remark: info.remark
   };
-  await orderModel.createOrder(order);
+  const { insertId } = await orderModel.createOrder(order);
+  await orderModel.updateState(insertId, orderModel.ORDER_STATE.CREATED);
+  return insertId;
 };
 
-exports.deleteDish = async () => {
+exports.getCompleteInfomation = async id => {
+  const order = await exports.getOne(id);
+  assert(order, '订单不存在');
+  const restaurant = await restaurantService.getInformationById(order.restaurant_id);
+  order.customer = {
+    customer_id: order.customer_id
+  };
+  order.restaurant = restaurant;
+  delete order.customer_id;
+  delete order.restaurant_id;
+  order.dish = JSON.parse(order.dish);
+  order.state = (await orderModel.getState(id, 1))[0].state;
+  return order;
+};
 
+exports.pay = async id => {
+  assert(await exports.exist(id), '订单不存在');
+  await orderModel.updateState(id, orderModel.ORDER_STATE.PAID);
+  await orderModel.updateOrder(id, {
+    payment: 'DreamPay'
+  });
 };
 
 exports.getRestaurantOrder = async () => {
@@ -66,6 +86,11 @@ exports.getRestaurantOrder = async () => {
 
 exports.updateOrder = async () => {
 
+};
+
+exports.getLastState = async order_id => {
+  assert(await exports.exist(order_id), '订单不存在');
+  return (await orderModel.getState(order_id, 1))[0].state;
 };
 
 exports.exist = async id => {
