@@ -25,3 +25,7 @@ exports.exist = async id => {
 exports.getOne = async id => {
   return categoryModel.getOne(id);
 };
+
+exports.getAll = async restaurant_id => {
+  return categoryModel.getAll(restaurant_id);
+};

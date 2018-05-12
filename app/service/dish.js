@@ -3,8 +3,9 @@ const categoryService = require('./category');
 const assert = require('../../lib/assert');
 const _ = require('lodash');
 
-exports.getSelfDish = async () => {
-
+exports.getSelfDish = async restaurant_id => {
+  const categories = await categoryService.getAll(restaurant_id);
+  if (categories.length === 0) return [];
 };
 
 exports.createDish = async (restaurant_id, info) => {
@@ -12,6 +13,7 @@ exports.createDish = async (restaurant_id, info) => {
   assert(category, '分类不存在');
   assert(category.restaurant_id === restaurant_id, '这个分类不属于你');
   const dish = {
+    restaurant_id,
     category_id: info.category_id,
     name: info.name,
     price: info.price
@@ -38,8 +40,8 @@ exports.updateDish = async (restaurant_id, dish_id, info) => {
 
 exports.deleteDish = async (restaurant_id, id) => {
   const dish = await dishModel.getOne(id);
-  const category = await categoryService.getOne(dish.category_id);
-  assert(category.restaurant_id === restaurant_id, '这个菜品不属于你');
+  if (!dish) return;
+  assert(dish.restaurant_id === restaurant_id, '这个菜品不属于你');
   await dishModel.deleteDish(id);
 };
 

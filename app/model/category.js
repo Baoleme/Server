@@ -48,3 +48,15 @@ exports.getOne = async id => {
   const arr = await query(sql, [id]);
   return arr.length ? arr[0] : null;
 };
+
+exports.getAll = async restaurant_id => {
+  const sql = `
+    SELECT
+    category_id,
+    restaurant_id,
+    name
+    FROM Category
+    WHERE restaurant_id = ?
+  `;
+  return query(sql, [restaurant_id]);
+};
