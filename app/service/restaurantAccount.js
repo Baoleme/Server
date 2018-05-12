@@ -14,10 +14,10 @@ exports.create = async restaurant => {
   const exist = await restaurantModel.getIdAndPasswordByEmail(restaurant.email);
   assert(!exist, '邮箱已经被使用');
   const extname = path.extname(restaurant.file.filename);
-  const destPath = path.resolve(systemConfig.fileDir, restaurant.email, 'license' + extname);
+  const destPath = path.resolve(systemConfig.fileDir, 'license', restaurant.email + extname);
   fs.ensureDirSync(path.dirname(destPath));
   restaurant.file.pipe(fs.createWriteStream(destPath));
-  restaurant.license_url = `${systemConfig.apiUrl}/files/${restaurant.email}/license${extname}`;
+  restaurant.license_url = `${systemConfig.apiUrl}/files/license/${restaurant.email}${extname}`;
   return restaurantModel.create(restaurant);
 };
 
