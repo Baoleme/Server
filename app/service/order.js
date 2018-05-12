@@ -84,8 +84,19 @@ exports.pay = async (customer_id, order_id) => {
   });
 };
 
-exports.getRestaurantOrder = async () => {
-
+exports.getRestaurantOrder = async (restaurant_id, since, number) => {
+  const orders = await orderModel.getAll(restaurant_id, since, number);
+  const restaurant = await restaurantService.getInformationById(restaurant_id);
+  for (const one of orders) {
+    one.customer = {
+      customer_id: one.customer_id
+    };
+    one.restaurant = restaurant;
+    delete one.customer_id;
+    delete one.restaurant_id;
+    one.dish = JSON.parse(one.dish);
+  }
+  return orders;
 };
 
 exports.updateOrderState = async (restaurant_id, order_id, state) => {

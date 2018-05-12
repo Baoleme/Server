@@ -30,7 +30,15 @@ exports.pay = async ctx => {
 };
 
 exports.getRestaurantOrder = async ctx => {
-
+  let { since, number } = ctx.params;
+  since = since ? new Date(since) : new Date();
+  number = number ? Number(number) : 30;
+  ctx.verify(
+    { data: since, type: 'date', message: 'since格式不正确' },
+    { data: number, type: 'positive', message: 'number格式不正确' }
+  );
+  number = Math.min(number, 30);
+  ctx.body = await orderService.getRestaurantOrder(ctx.session.restaurant_id, since, number);
 };
 
 exports.updateOrderState = async ctx => {

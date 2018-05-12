@@ -57,6 +57,34 @@ exports.getState = async (order_id, limit) => {
   return query(sql, [order_id]);
 };
 
+exports.getAll = async (restaurant_id, since, limit) => {
+  console.log(restaurant_id, since, limit);
+  const sql = `
+    SELECT
+    o.order_id,
+    o.customer_id,
+    o.restaurant_id,
+    o.price,
+    o.\`table\`,
+    o.payment,
+    o.dish,
+    o.remark,
+    r.state
+    FROM \`Order\` o JOIN OrderRecord r
+    ON r.order_record_id = (
+      SELECT
+      MAX(r1.order_record_id)
+      FROM OrderRecord r1
+      WHERE r1.order_id = o.order_id
+    )
+    WHERE o.restaurant_id = ?
+    AND r.time <= ?
+    ORDER BY r.state
+    LIMIT ?
+  `;
+  return query(sql, [restaurant_id, since, limit]);
+};
+
 exports.getOne = async id => {
   const sql = `
     SELECT
