@@ -165,7 +165,7 @@ describe('Restaurant Account', async function () {
         confirm_email: false,
         description: null,
         email: '3@test.com',
-        license_url: 'http://localhost:8520/files/3@test.com/license.docx',
+        license_url: 'http://localhost:8520/files/license/3@test.com.docx',
         logo_url: 'https://api.baoleme.andiedie.cn/files/default-logo.png',
         name: '1',
         phone: null,
@@ -218,7 +218,7 @@ describe('Restaurant Account', async function () {
         confirm_email: true,
         name: '1',
         description: null,
-        license_url: `http://localhost:8520/files/${testEmail}/license.docx`,
+        license_url: `http://localhost:8520/files/license/${testEmail}.docx`,
         logo_url: 'https://api.baoleme.andiedie.cn/files/default-logo.png',
         phone: null
       });
