@@ -18,8 +18,7 @@ exports.createDish = async ctx => {
     { data: info.tag, type: 'string-array', require: false, message: 'tag格式不正确' }
   );
   if (info.specifications) checkSpecifications(info.specifications);
-  await dishService.createDish(ctx.session.restaurant_id, info);
-  ctx.status = 200;
+  ctx.body = await dishService.createDish(ctx.session.restaurant_id, info);
 };
 
 exports.updateDish = async ctx => {

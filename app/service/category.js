@@ -2,7 +2,11 @@ const categoryModel = require('../model/category');
 const assert = require('../../lib/assert');
 
 exports.createCategory = async (restaurant_id, name) => {
-  await categoryModel.createCategory(restaurant_id, name);
+  const { insertId } = await categoryModel.createCategory(restaurant_id, name);
+  return {
+    category_id: insertId,
+    name
+  };
 };
 
 exports.updateCategory = async (id, name) => {

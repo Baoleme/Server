@@ -40,7 +40,10 @@ exports.createDish = async (restaurant_id, info) => {
   dish.image_url = info.image_url ? JSON.stringify(info.image_url) : '[]';
   dish.description = info.description || '';
   dish.tag = info.tag ? JSON.stringify(info.tag) : '[]';
-  await dishModel.createDish(dish);
+  const { insertId } = await dishModel.createDish(dish);
+  info.dish_id = insertId;
+  info.restaurant_id = restaurant_id;
+  return info;
 };
 
 exports.updateDish = async (restaurant_id, dish_id, info) => {

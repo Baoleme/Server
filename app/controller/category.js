@@ -3,8 +3,7 @@ const categoryService = require('../service/category');
 exports.createCategory = async ctx => {
   const { name } = ctx.request.body;
   ctx.verify({ data: name, type: 'string', maxLength: 45, message: 'name格式不正确' });
-  await categoryService.createCategory(ctx.session.restaurant_id, name);
-  ctx.status = 200;
+  ctx.body = await categoryService.createCategory(ctx.session.restaurant_id, name);
 };
 
 exports.updateCategory = async ctx => {
