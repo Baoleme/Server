@@ -4,7 +4,8 @@ node_js:
 
 install: npm install
 
-script: npm test
+# script: npm test
+script: npm version
 
 addons:
   ssh_known_hosts: 119.29.252.110
