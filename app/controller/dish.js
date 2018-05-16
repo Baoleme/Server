@@ -46,6 +46,12 @@ exports.deleteDish = async ctx => {
   ctx.status = 200;
 };
 
+exports.getInfoAndDish = async ctx => {
+  const id = ctx.params.id;
+  ctx.verify({ data: Number(id), type: 'positive', message: 'id格式不正确' });
+  ctx.body = await dishService.getInfoAndDish(id);
+};
+
 function checkSpecifications (specifications) {
   for (const one of specifications) {
     verify(

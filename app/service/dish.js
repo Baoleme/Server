@@ -1,6 +1,7 @@
 const dishModel = require('../model/dish');
 const categoryService = require('./category');
 const assert = require('../../lib/assert');
+const restaurantService = require('./restaurantAccount');
 const _ = require('lodash');
 
 exports.getSelfDish = async restaurant_id => {
@@ -64,6 +65,13 @@ exports.deleteDish = async (restaurant_id, id) => {
   if (!dish) return;
   assert(dish.restaurant_id === restaurant_id, '这个菜品不属于你');
   await dishModel.deleteDish(id);
+};
+
+exports.getInfoAndDish = async id => {
+  const result = await restaurantService.getInformationById(id);
+  assert(result, '餐厅不存在');
+  result.dish = await exports.getSelfDish(id);
+  return result;
 };
 
 exports.exist = async id => {
