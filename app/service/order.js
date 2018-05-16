@@ -38,7 +38,7 @@ exports.createOrder = async (customer_id, info) => {
     const dishPrice = dish.price + priceDelta;
     dishes.push({
       name: dish.name,
-      specifications: specificationName.join(','),
+      specifications: specificationName.join('\\'),
       price: dishPrice
     });
     // 计算总价
