@@ -3,6 +3,7 @@ const restaurantService = require('./restaurantAccount');
 const tableService = require('./table');
 const dishService = require('./dish');
 const assert = require('../../lib/assert');
+const _ = require('lodash');
 
 exports.createOrder = async (customer_id, info) => {
   // 确认餐厅和桌子存在
@@ -57,6 +58,23 @@ exports.createOrder = async (customer_id, info) => {
   return insertId;
 };
 
+exports.getCustomerOrder = async (customer_id, since, number) => {
+  const orders = await orderModel.getCustomerOrder(customer_id, since, number);
+  for (const one of orders) {
+    one.customer = {
+      customer_id: one.customer_id
+    };
+    one.restaurant = _(one)
+      .pick(['restaurant_email', 'restaurant_confirm_email', 'restaurant_name', 'restaurant_logo_url', 'restaurant_description', 'restaurant_phone', 'restaurant_license_url'])
+      .mapKeys((value, key) => key.substr(11))
+      .value();
+    one.restaurant.restaurant_id = one.restaurant_id;
+    one.dish = JSON.parse(one.dish);
+    ['restaurant_email', 'restaurant_confirm_email', 'restaurant_name', 'restaurant_logo_url', 'restaurant_description', 'restaurant_phone', 'restaurant_license_url', 'customer_id', 'restaurant_id'].forEach(key => delete one[key]);
+  }
+  return orders;
+};
+
 exports.getCompleteInfomation = async id => {
   const order = await exports.getOne(id);
   assert(order, '订单不存在');
@@ -85,7 +103,7 @@ exports.pay = async (customer_id, order_id) => {
 };
 
 exports.getRestaurantOrder = async (restaurant_id, since, number) => {
-  const orders = await orderModel.getAll(restaurant_id, since, number);
+  const orders = await orderModel.getRestaurantOrder(restaurant_id, since, number);
   const restaurant = await restaurantService.getInformationById(restaurant_id);
   for (const one of orders) {
     one.customer = {

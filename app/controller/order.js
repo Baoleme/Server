@@ -22,6 +22,18 @@ exports.createOrder = async ctx => {
   ctx.body = await orderService.getCompleteInfomation(id);
 };
 
+exports.getCustomerOrder = async ctx => {
+  let { since, number } = ctx.params;
+  since = since ? new Date(since) : new Date();
+  number = number ? Number(number) : 30;
+  ctx.verify(
+    { data: since, type: 'date', message: 'since格式不正确' },
+    { data: number, type: 'positive', message: 'number格式不正确' }
+  );
+  number = Math.min(number, 30);
+  ctx.body = await orderService.getCustomerOrder(ctx.session.customer_id, since, number);
+};
+
 exports.pay = async ctx => {
   const { id } = ctx.params;
   ctx.verify({ data: Number(id), type: 'positive', message: 'id格式不正确' });
