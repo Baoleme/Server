@@ -1,5 +1,6 @@
 const busboy = require('async-busboy');
 const rAccountService = require('../service/restaurantAccount');
+const _ = require('lodash');
 
 const allowMimeType = [
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -62,4 +63,26 @@ exports.emailConfirm = async ctx => {
   await rAccountService.emailConfirm(cipher);
   if (onSuccess) ctx.redirect(onSuccess);
   else ctx.body = '邮箱已确认';
+};
+
+exports.updateInformation = async ctx => {
+  const info = _.pick(ctx.request.body, ['password', 'name', 'logo_url', 'description', 'phone']);
+  ctx.verify(
+    { data: info.password, type: 'string', require: false, message: 'password格式不正确' },
+    { data: info.name, type: 'string', require: false, maxLength: 45, message: 'name格式不正确' },
+    { data: info.logo_url, type: 'string', require: false, maxLength: 255, message: 'logo_url格式不正确' },
+    { data: info.description, type: 'string', require: false, message: 'description格式不正确' },
+    { data: info.phone, type: 'string', require: false, maxLength: 11, message: 'phone格式不正确' }
+  );
+  if (info.password) {
+    ctx.assert(
+      /^[`~!@#$%^&*()_+-={}[\]\\|;:'",<.>/?0-9a-zA-Z]{6,32}$/.test(info.password),
+      'password格式不正确'
+    );
+  }
+  if (info.phone) {
+    ctx.assert(/^1\d{10}$/.test(info.phone), 'phone格式不正确');
+  }
+  if (_.keys(info).length) await rAccountService.updateInformation(ctx.session.restaurant_id, info);
+  ctx.status = 200;
 };

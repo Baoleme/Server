@@ -1,4 +1,5 @@
 const { query } = require('../../lib/db');
+const _ = require('lodash');
 
 exports.create = restaurant => {
   const sql = `
@@ -43,15 +44,14 @@ exports.getIdAndPasswordByEmail = async email => {
 };
 
 exports.update = async (restaurant_id, options) => {
-  let sql = 'UPDATE Restaurant SET';
-  const data = [];
-  for (const key in options) {
-    sql += ' ?? = ?,';
-    data.push(key);
-    data.push(options[key]);
-  }
-  sql = sql.substr(0, sql.length - 1);
-  sql += ' WHERE restaurant_id = ?';
+  const sql = `
+    UPDATE Restaurant
+    SET
+    ?? = ?
+    ${', ?? = ?'.repeat(_.keys(options).length - 1)}
+    WHERE restaurant_id = ?
+  `;
+  const data = _(options).toPairs().flatten().value();
   data.push(restaurant_id);
   return query(sql, data);
 };

@@ -60,6 +60,10 @@ exports.emailConfirm = async cipher => {
   });
 };
 
+exports.updateInformation = async (id, info) => {
+  await restaurantModel.update(id, info);
+};
+
 exports.getLastLink = () => {
   return isTest ? lastLink : null;
 };
