@@ -68,7 +68,8 @@ exports.getRestaurantOrder = async (restaurant_id, since, limit) => {
     o.payment,
     o.dish,
     o.remark,
-    r.state
+    r.state,
+    r.time
     FROM \`Order\` o JOIN OrderRecord r
     ON r.order_record_id = (
       SELECT
@@ -96,6 +97,7 @@ exports.getCustomerOrder = async (restaurant_id, since, limit) => {
     o.dish,
     o.remark,
     r.state,
+    r.time,
     res.email AS restaurant_email,
     res.confirm_email AS restaurant_confirm_email,
     res.name AS restaurant_name,

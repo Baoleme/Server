@@ -86,7 +86,9 @@ exports.getCompleteInfomation = async id => {
   delete order.customer_id;
   delete order.restaurant_id;
   order.dish = JSON.parse(order.dish);
-  order.state = (await orderModel.getState(id, 1))[0].state;
+  const record = (await orderModel.getState(id, 1))[0];
+  order.state = record.state;
+  order.time = record.time;
   return order;
 };
 
