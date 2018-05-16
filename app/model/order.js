@@ -115,6 +115,7 @@ exports.getCustomerOrder = async (restaurant_id, since, limit) => {
     WHERE o.customer_id = ?
     AND r.time <= ?
     AND res.restaurant_id = o.restaurant_id
+    ORDER BY r.time DESC
     LIMIT ?
   `;
   return query(sql, [restaurant_id, since, limit]);
