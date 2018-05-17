@@ -26,10 +26,10 @@ exports.createOrder = async ctx => {
 
 exports.getCustomerOrder = async ctx => {
   let { since, number } = ctx.params;
-  since = since ? new Date(since) : new Date();
+  since = since ? new Date(since) : 'NOW()';
   number = number ? Number(number) : 30;
   ctx.verify(
-    { data: since, type: 'date', message: 'since格式不正确' },
+    // { data: since, type: 'date', message: 'since格式不正确' },
     { data: number, type: 'positive', message: 'number格式不正确' }
   );
   number = Math.min(number, 30);
