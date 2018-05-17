@@ -85,7 +85,7 @@ exports.getRestaurantOrder = async (restaurant_id, since, limit) => {
   return query(sql, [restaurant_id, since, limit]);
 };
 
-exports.getCustomerOrder = async (restaurant_id, since, limit) => {
+exports.getCustomerOrder = async (customer_id, since, limit) => {
   const sql = `
     SELECT
     o.order_id,
@@ -118,7 +118,7 @@ exports.getCustomerOrder = async (restaurant_id, since, limit) => {
     ORDER BY r.time DESC
     LIMIT ?
   `;
-  return query(sql, [restaurant_id, since, limit]);
+  return query(sql, [customer_id, since, limit]);
 };
 
 exports.getOne = async id => {
