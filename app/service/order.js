@@ -21,6 +21,7 @@ exports.createOrder = async (customer_id, info) => {
     // 确认菜品属于这个餐厅
     assert(dish.restaurant_id === info.restaurant_id, `菜品${one.dish_id}不属于餐厅${info.restaurant_id}`);
     dish.specifications = JSON.parse(dish.specifications);
+    dish.image_url = JSON.parse(dish.image_url);
     // 确认规格数量和选项合法
     let priceDelta = 0;
     let specificationName = [];
@@ -40,7 +41,8 @@ exports.createOrder = async (customer_id, info) => {
       name: dish.name,
       specifications: specificationName.join('\\'),
       price: dishPrice,
-      count: one.count
+      count: one.count,
+      image_url: dish.image_url.length ? dish.image_url[0] : 'https://api.baoleme.andiedie.cn/files/default-dish.png'
     });
     // 计算总价
     price += dishPrice * one.count;
