@@ -39,10 +39,11 @@ exports.createOrder = async (customer_id, info) => {
     dishes.push({
       name: dish.name,
       specifications: specificationName.join('\\'),
-      price: dishPrice
+      price: dishPrice,
+      count: one.count
     });
     // 计算总价
-    price += dishPrice;
+    price += dishPrice * one.count;
   }
   assert(price === info.price, `价格错误，应该为${price}`);
   const order = {

@@ -14,8 +14,10 @@ exports.createOrder = async ctx => {
     for (const one of info.dish) {
       ctx.verify(
         { data: one.dish_id, type: 'positive', message: 'dish.dish_id格式不正确' },
-        { data: one.specifications, type: 'e-non-negative-array', message: 'dish.specifications格式不正确' }
+        { data: one.specifications, type: 'e-non-negative-array', message: 'dish.specifications格式不正确' },
+        { data: one.count, type: 'positive', message: 'dish.count格式不正确' }
       );
+      ctx.assert(_.keys(one).length === 3, 'dish中有多余字段');
     }
   }
   const id = await orderService.createOrder(ctx.session.customer_id, info);
