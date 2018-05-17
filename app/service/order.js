@@ -42,7 +42,7 @@ exports.createOrder = async (customer_id, info) => {
       specifications: specificationName.join('\\'),
       price: dishPrice,
       count: one.count,
-      image_url: dish.image_url.length ? dish.image_url[0] : 'https://api.baoleme.andiedie.cn/files/default-dish.png'
+      image_url: dish.image_url[0]
     });
     // 计算总价
     price += dishPrice * one.count;
