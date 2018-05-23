@@ -77,14 +77,22 @@ exports.getOne = async id => {
 };
 
 function encipher (raw) {
-  const cipher = crypto.createCipher('aes192', mailConfig.cipherKey);
-  let encrypted = cipher.update(raw);
-  return encrypted + cipher.final('hex');
+  const iv = Buffer.from(crypto.randomBytes(16));
+  const key = Buffer.from(mailConfig.cipherKey, 'hex');
+  const cipher = crypto.createCipheriv('aes-256-cfb', key, iv);
+  cipher.setEncoding('hex');
+  cipher.write(raw);
+  cipher.end();
+  const ciphered = cipher.read();
+  return `${ciphered}$${iv.toString('hex')}`;
 }
 
 function decipher (encrypted) {
-  const decipher = crypto.createDecipher('aes192', mailConfig.cipherKey);
-  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  let [ciphered, iv] = encrypted.split('$');
+  iv = Buffer.from(iv, 'hex');
+  const key = Buffer.from(mailConfig.cipherKey, 'hex');
+  const decipher = crypto.createDecipheriv('aes-256-cfb', key, iv);
+  let decrypted = decipher.update(ciphered, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
   return decrypted;
 }
