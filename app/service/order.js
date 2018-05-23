@@ -107,8 +107,9 @@ exports.pay = async (customer_id, order_id) => {
   });
 };
 
-exports.getRestaurantOrder = async (restaurant_id, since, number) => {
-  const orders = await orderModel.getRestaurantOrder(restaurant_id, since, number);
+exports.getRestaurantOrder = async (restaurant_id, page, number) => {
+  const number_of_pages = Math.ceil(await orderModel.getRestaurantOrderNumber(restaurant_id) / number);
+  const orders = await orderModel.getRestaurantOrder(restaurant_id, page * number, number);
   const restaurant = await restaurantService.getInformationById(restaurant_id);
   for (const one of orders) {
     one.customer = {
@@ -119,7 +120,10 @@ exports.getRestaurantOrder = async (restaurant_id, since, number) => {
     delete one.restaurant_id;
     one.dish = JSON.parse(one.dish);
   }
-  return orders;
+  return {
+    number_of_pages,
+    order: orders
+  };
 };
 
 exports.updateOrderState = async (restaurant_id, order_id, state) => {
