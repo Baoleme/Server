@@ -5,7 +5,7 @@ exports.ORDER_STATE = {
   CREATED: 'created',
   PAID: 'paid',
   ACCEPTED: 'accepted',
-  CANCELLED: 'canelled',
+  CANCELLED: 'cancelled',
   COMPLETED: 'completed'
 };
 
@@ -57,7 +57,7 @@ exports.getState = async (order_id, limit) => {
   return query(sql, [order_id]);
 };
 
-exports.getRestaurantOrder = async (restaurant_id, offset, limit) => {
+exports.getRestaurantOrder = async (restaurant_id, offset, limit, state) => {
   const sql = `
     SELECT
     o.order_id,
@@ -78,20 +78,28 @@ exports.getRestaurantOrder = async (restaurant_id, offset, limit) => {
       WHERE r1.order_id = o.order_id
     )
     WHERE o.restaurant_id = ?
-    ORDER BY r.state
+    AND r.state IN (?${',?'.repeat(state.length - 1)})
+    ORDER BY FIELD(r.state${',?'.repeat(state.length)})
     LIMIT ?, ?
   `;
-  return query(sql, [restaurant_id, offset, limit]);
+  return query(sql, [restaurant_id, ...state, ...state, offset, limit]);
 };
 
-exports.getRestaurantOrderNumber = async restaurant_id => {
+exports.getRestaurantOrderNumber = async (restaurant_id, state) => {
   const sql = `
     SELECT
     count(1) AS number
-    FROM \`Order\`
-    WHERE restaurant_id = ?
+    FROM \`Order\` o JOIN OrderRecord r
+    ON r.order_record_id = (
+      SELECT
+      MAX(r1.order_record_id)
+      FROM OrderRecord r1
+      WHERE r1.order_id = o.order_id
+    )
+    WHERE o.restaurant_id = ?
+    AND r.state IN (?${',?'.repeat(state.length - 1)})
   `;
-  return (await query(sql, [restaurant_id]))[0].number;
+  return (await query(sql, [restaurant_id, ...state]))[0].number;
 };
 
 exports.getCustomerOrder = async (customer_id, since, limit) => {

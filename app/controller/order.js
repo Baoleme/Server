@@ -43,14 +43,16 @@ exports.pay = async ctx => {
 };
 
 exports.getRestaurantOrder = async ctx => {
-  let { page, number } = ctx.query;
+  let { page, number, state } = ctx.query;
   page = page ? Number(page) : 0;
   number = number ? Number(number) : 30;
   ctx.verify(
     { data: page, type: 'non-negative', message: 'page格式不正确' },
-    { data: number, type: 'positive', message: 'number格式不正确' }
+    { data: number, type: 'positive', message: 'number格式不正确' },
+    { data: state, type: 'string', require: false, message: 'state格式不正确' }
   );
-  ctx.body = await orderService.getRestaurantOrder(ctx.session.restaurant_id, page, number);
+  state = state ? state.split(',') : ['paid', 'accepted', 'cancelled', 'completed', 'created'];
+  ctx.body = await orderService.getRestaurantOrder(ctx.session.restaurant_id, page, number, state);
 };
 
 exports.updateOrderState = async ctx => {
