@@ -7,11 +7,12 @@ exports.getSelfDish = async ctx => {
 };
 
 exports.createDish = async ctx => {
-  const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_url', 'description', 'tag']);
+  const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'spicy', 'specifications', 'image_url', 'description', 'tag']);
   ctx.verify(
     { data: info.category_id, type: 'positive', message: 'category_id格式不正确' },
     { data: info.name, type: 'string', maxLength: 45, message: 'name格式不正确' },
     { data: info.price, type: 'number', message: 'price格式不正确' },
+    { data: info.spicy, type: 'non-negative', require: false, message: 'spicy格式不正确' },
     { data: info.specifications, type: 'array', require: false, message: 'specifications格式不正确' },
     { data: info.image_url, type: 'string-array', require: false, message: 'image_url格式不正确' },
     { data: info.description, type: 'string', require: false, message: 'description格式不正确' },
@@ -22,13 +23,14 @@ exports.createDish = async ctx => {
 };
 
 exports.updateDish = async ctx => {
-  const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'specifications', 'image_url', 'description', 'tag']);
+  const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'spicy', 'specifications', 'image_url', 'description', 'tag']);
   const { id: dish_id } = ctx.params;
   ctx.verify(
     { data: Number(dish_id), type: 'positive', message: 'id格式不正确' },
     { data: info.category_id, type: 'positive', require: false, message: 'category_id格式不正确' },
     { data: info.name, type: 'string', maxLength: 45, require: false, message: 'name格式不正确' },
     { data: info.price, type: 'number', require: false, message: 'price格式不正确' },
+    { data: info.spicy, type: 'non-negative', require: false, message: 'spicy格式不正确' },
     { data: info.specifications, type: 'array', require: false, message: 'specifications格式不正确' },
     { data: info.image_url, type: 'string-array', require: false, message: 'image_url格式不正确' },
     { data: info.description, type: 'string', require: false, message: 'description格式不正确' },

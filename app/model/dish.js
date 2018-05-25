@@ -4,11 +4,11 @@ const _ = require('lodash');
 exports.createDish = dish => {
   const sql = `
     INSERT INTO Dish
-    (restaurant_id, category_id, name, price, specifications, image_url, description, tag)
+    (restaurant_id, category_id, name, price, spicy, specifications, image_url, description, tag)
     VALUES
-    (?, ?, ?, ?, ?, ?, ?, ?)
+    (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
-  return query(sql, [dish.restaurant_id, dish.category_id, dish.name, dish.price, dish.specifications, dish.image_url, dish.description, dish.tag]);
+  return query(sql, [dish.restaurant_id, dish.category_id, dish.name, dish.price, dish.spicy, dish.specifications, dish.image_url, dish.description, dish.tag]);
 };
 
 exports.updateDish = (id, dish) => {
@@ -40,6 +40,7 @@ exports.getOne = async id => {
     category_id,
     name,
     price,
+    spicy,
     specifications,
     image_url,
     description,
@@ -59,6 +60,7 @@ exports.getAll = async restaurant_id => {
     category_id,
     name,
     price,
+    spicy,
     specifications,
     image_url,
     description,

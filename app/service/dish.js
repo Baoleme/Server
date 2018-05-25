@@ -35,7 +35,8 @@ exports.createDish = async (restaurant_id, info) => {
     restaurant_id,
     category_id: info.category_id,
     name: info.name,
-    price: info.price
+    price: info.price,
+    spicy: info.spicy || 0
   };
   dish.specifications = info.specifications ? JSON.stringify(info.specifications) : '[]';
   dish.image_url = info.image_url ? JSON.stringify(info.image_url) : '[]';
