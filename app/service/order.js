@@ -107,11 +107,11 @@ exports.pay = async (customer_id, order_id) => {
   });
 };
 
-exports.getRestaurantOrder = async (restaurant_id, page, number, state) => {
+exports.getRestaurantOrder = async (restaurant_id, page, number, state, keyword) => {
   const allowedState = _.values(orderModel.ORDER_STATE);
   assert(state.every(value => allowedState.includes(value)), '非法的订单状态');
-  const number_of_pages = Math.ceil(await orderModel.getRestaurantOrderNumber(restaurant_id, state) / number);
-  const orders = await orderModel.getRestaurantOrder(restaurant_id, page * number, number, state);
+  const orders = await orderModel.getRestaurantOrder(restaurant_id, page * number, number, state, keyword);
+  const number_of_pages = Math.ceil(orders.count / number);
   const restaurant = await restaurantService.getInformationById(restaurant_id);
   for (const one of orders) {
     one.customer = {

@@ -1,4 +1,4 @@
-const { query } = require('../../lib/db');
+const { query, transaction } = require('../../lib/db');
 const _ = require('lodash');
 
 exports.ORDER_STATE = {
@@ -57,9 +57,29 @@ exports.getState = async (order_id, limit) => {
   return query(sql, [order_id]);
 };
 
-exports.getRestaurantOrder = async (restaurant_id, offset, limit, state) => {
+exports.getRestaurantOrder = async (restaurant_id, offset, limit, state, keyword) => {
+  let searchSQL = '';
+  let searchData = '';
+  if (keyword) {
+    const nan = isNaN(Number(keyword));
+    searchSQL = nan ? `
+        AND (
+          o.dish LIKE ?
+          OR o.payment LIKE ?
+          OR o.remark LIKE ?
+        )
+        ` : `
+        AND (
+          o.order_id = ?
+          OR o.price = ?
+          OR o.\`table\` = ?
+        )
+        `;
+    searchData = nan ? Array(3).fill(`%${keyword}%`) : Array(3).fill(keyword);
+  }
   const sql = `
     SELECT
+    SQL_CALC_FOUND_ROWS
     o.order_id,
     o.customer_id,
     o.restaurant_id,
@@ -79,13 +99,31 @@ exports.getRestaurantOrder = async (restaurant_id, offset, limit, state) => {
     )
     WHERE o.restaurant_id = ?
     AND r.state IN (?${',?'.repeat(state.length - 1)})
+    ${searchSQL}
     ORDER BY FIELD(r.state${',?'.repeat(state.length)})
     LIMIT ?, ?
   `;
-  return query(sql, [restaurant_id, ...state, ...state, offset, limit]);
+  const data = [restaurant_id, ...state, ...searchData, ...state, offset, limit];
+  let res;
+  await transaction(async query => {
+    res = await query(sql, data);
+    res.count = (await query('SELECT FOUND_ROWS() AS count'))[0].count;
+  });
+  return res;
 };
 
-exports.getRestaurantOrderNumber = async (restaurant_id, state) => {
+exports.getRestaurantOrderNumber = async (restaurant_id, state, keyword) => {
+  const searchSQL = keyword ? `
+    AND (
+      o.order_id LIKE ?
+      OR o.price LIKE ?
+      OR o.\`table\` LIKE ?
+      OR o.dish LIKE ?
+      OR o.payment LIKE ?
+      OR o.remark LIKE ?
+    )
+  ` : '';
+  const searchData = keyword ? Array(6).fill(`%${keyword}%`) : [];
   const sql = `
     SELECT
     count(1) AS number
@@ -98,8 +136,9 @@ exports.getRestaurantOrderNumber = async (restaurant_id, state) => {
     )
     WHERE o.restaurant_id = ?
     AND r.state IN (?${',?'.repeat(state.length - 1)})
+    ${searchSQL}
   `;
-  return (await query(sql, [restaurant_id, ...state]))[0].number;
+  return (await query(sql, [restaurant_id, ...state, ...searchData]))[0].number;
 };
 
 exports.getCustomerOrder = async (customer_id, since, limit) => {
