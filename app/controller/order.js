@@ -25,14 +25,14 @@ exports.createOrder = async ctx => {
 };
 
 exports.getCustomerOrder = async ctx => {
-  let { since, number } = ctx.query;
-  since = since ? new Date(since) : new Date();
+  let { page, number } = ctx.query;
+  page = page ? Number(page) : 0;
   number = number ? Number(number) : 30;
   ctx.verify(
-    { data: since, type: 'date', message: 'since格式不正确' },
+    { data: page, type: 'non-negative', message: 'page格式不正确' },
     { data: number, type: 'positive', message: 'number格式不正确' }
   );
-  ctx.body = await orderService.getCustomerOrder(ctx.session.customer_id, since, number);
+  ctx.body = await orderService.getCustomerOrder(ctx.session.customer_id, page, number);
 };
 
 exports.pay = async ctx => {

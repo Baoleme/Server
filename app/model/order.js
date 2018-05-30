@@ -87,9 +87,7 @@ exports.getRestaurantOrder = async (restaurant_id, offset, limit, state, keyword
     o.\`table\`,
     o.payment,
     o.dish,
-    o.remark,
-    r.state,
-    r.time
+    o.remark
     FROM \`Order\` o JOIN OrderRecord r
     ON r.order_record_id = (
       SELECT
@@ -112,36 +110,7 @@ exports.getRestaurantOrder = async (restaurant_id, offset, limit, state, keyword
   return res;
 };
 
-exports.getRestaurantOrderNumber = async (restaurant_id, state, keyword) => {
-  const searchSQL = keyword ? `
-    AND (
-      o.order_id LIKE ?
-      OR o.price LIKE ?
-      OR o.\`table\` LIKE ?
-      OR o.dish LIKE ?
-      OR o.payment LIKE ?
-      OR o.remark LIKE ?
-    )
-  ` : '';
-  const searchData = keyword ? Array(6).fill(`%${keyword}%`) : [];
-  const sql = `
-    SELECT
-    count(1) AS number
-    FROM \`Order\` o JOIN OrderRecord r
-    ON r.order_record_id = (
-      SELECT
-      MAX(r1.order_record_id)
-      FROM OrderRecord r1
-      WHERE r1.order_id = o.order_id
-    )
-    WHERE o.restaurant_id = ?
-    AND r.state IN (?${',?'.repeat(state.length - 1)})
-    ${searchSQL}
-  `;
-  return (await query(sql, [restaurant_id, ...state, ...searchData]))[0].number;
-};
-
-exports.getCustomerOrder = async (customer_id, since, limit) => {
+exports.getCustomerOrder = async (customer_id, page, limit) => {
   const sql = `
     SELECT
     o.order_id,
@@ -152,8 +121,6 @@ exports.getCustomerOrder = async (customer_id, since, limit) => {
     o.payment,
     o.dish,
     o.remark,
-    r.state,
-    r.time,
     res.email AS restaurant_email,
     res.confirm_email AS restaurant_confirm_email,
     res.name AS restaurant_name,
@@ -161,20 +128,29 @@ exports.getCustomerOrder = async (customer_id, since, limit) => {
     res.description AS restaurant_description,
     res.phone AS restaurant_phone,
     res.license_url AS restaurant_license_url
-    FROM \`Order\` o JOIN OrderRecord r
-    ON r.order_record_id = (
-      SELECT
-      MAX(r1.order_record_id)
-      FROM OrderRecord r1
-      WHERE r1.order_id = o.order_id
-    ), Restaurant res
+    FROM \`Order\` o, Restaurant res
     WHERE o.customer_id = ?
-    AND r.time <= ?
     AND res.restaurant_id = o.restaurant_id
-    ORDER BY r.time DESC
-    LIMIT ?
+    ORDER BY o.order_id DESC
+    LIMIT ?,?
   `;
-  return query(sql, [customer_id, since, limit]);
+  return query(sql, [customer_id, page * limit, limit]);
+};
+
+exports.getOrderState = async order_ids => {
+  if (order_ids.length === 0) return [];
+  const sql = `
+    SELECT
+    order_id,
+    state,
+    time
+    FROM OrderRecord
+    WHERE order_id IN (? ${',?'.repeat(order_ids.length - 1)})
+  `;
+  let state_records = await query(sql, order_ids);
+  state_records = _.groupBy(state_records, 'order_id');
+  _.values(state_records).forEach(arr => arr.forEach(value => delete value.order_id));
+  return state_records;
 };
 
 exports.getOne = async id => {

@@ -9,7 +9,9 @@ exports.login = async ctx => {
   ctx.verify({ data: code, type: 'string', message: 'code格式不正确' });
   const customer = await cAccountService.login(code);
   ctx.session.customer_id = customer.customer_id;
-  ctx.body = customer;
+  ctx.body = {
+    customer_id: customer.customer_id
+  };
 };
 
 exports.logout = ctx => {

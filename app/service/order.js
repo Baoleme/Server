@@ -62,8 +62,10 @@ exports.createOrder = async (customer_id, info) => {
   return insertId;
 };
 
-exports.getCustomerOrder = async (customer_id, since, number) => {
-  const orders = await orderModel.getCustomerOrder(customer_id, since, number);
+exports.getCustomerOrder = async (customer_id, page, number) => {
+  const orders = await orderModel.getCustomerOrder(customer_id, page, number);
+  const order_ids = orders.map(value => value.order_id);
+  const state_records = await orderModel.getOrderState(order_ids);
   for (const one of orders) {
     one.customer = {
       customer_id: one.customer_id
@@ -74,6 +76,7 @@ exports.getCustomerOrder = async (customer_id, since, number) => {
       .value();
     one.restaurant.restaurant_id = one.restaurant_id;
     one.dish = JSON.parse(one.dish);
+    one.state_record = state_records[one.order_id];
     ['restaurant_email', 'restaurant_confirm_email', 'restaurant_name', 'restaurant_logo_url', 'restaurant_description', 'restaurant_phone', 'restaurant_license_url', 'customer_id', 'restaurant_id'].forEach(key => delete one[key]);
   }
   return orders;
@@ -112,6 +115,8 @@ exports.getRestaurantOrder = async (restaurant_id, page, number, state, keyword)
   const allowedState = _.values(orderModel.ORDER_STATE);
   assert(state.every(value => allowedState.includes(value)), '非法的订单状态');
   const orders = await orderModel.getRestaurantOrder(restaurant_id, page * number, number, state, keyword);
+  const order_ids = orders.map(value => value.order_id);
+  const state_records = await orderModel.getOrderState(order_ids);
   const number_of_pages = Math.ceil(orders.count / number);
   const restaurant = await restaurantService.getInformationById(restaurant_id);
   for (const one of orders) {
@@ -122,6 +127,7 @@ exports.getRestaurantOrder = async (restaurant_id, page, number, state, keyword)
     delete one.customer_id;
     delete one.restaurant_id;
     one.dish = JSON.parse(one.dish);
+    one.state_record = state_records[one.order_id];
   }
   return {
     number_of_pages,

@@ -4,7 +4,12 @@ const wechatConfig = require('../../config/wechat');
 const assert = require('../../lib/assert');
 
 exports.login = async code => {
-  let openid = code === 'huaq' ? code : await getOpenidByCode(code);
+  if (code.startsWith('huaq')) {
+    return {
+      customer_id: Number(code.substr(4))
+    };
+  }
+  let openid = await getOpenidByCode(code);
   let customer = await customerModel.getByOpenid(openid);
   if (!customer) {
     // regist
