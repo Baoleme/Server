@@ -1,4 +1,5 @@
 const { query } = require('../../lib/db');
+const _ = require('lodash');
 
 exports.createCategory = async (id, name) => {
   const sql = `
@@ -8,6 +9,24 @@ exports.createCategory = async (id, name) => {
     (?, ?)
   `;
   return query(sql, [id, name]);
+};
+
+exports.updateCategoryOrder = async orderArray => {
+  if (orderArray.length === 0) return;
+  const sql = `
+    UPDATE Category
+    SET \`index\` = (
+      CASE
+      ${'WHEN category_id = ? THEN ? '.repeat(orderArray.length)}
+      ELSE \`index\`
+      END
+    )
+    WHERE category_id IN (? ${',?'.repeat(orderArray.length - 1)})
+  `;
+  console.log(sql);
+  const data = _.flatten(_.zip(orderArray, _.range(orderArray.length)));
+  console.log(data);
+  return query(sql, [...data, ...orderArray]);
 };
 
 exports.updateCategory = async (id, name) => {
@@ -57,6 +76,7 @@ exports.getAll = async restaurant_id => {
     name
     FROM Category
     WHERE restaurant_id = ?
+    ORDER BY \`index\`
   `;
   return query(sql, [restaurant_id]);
 };

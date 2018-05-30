@@ -6,6 +6,15 @@ exports.createCategory = async ctx => {
   ctx.body = await categoryService.createCategory(ctx.session.restaurant_id, name);
 };
 
+exports.updateCategoryOrder = async ctx => {
+  const orderArray = ctx.request.body;
+  ctx.verify(
+    { data: orderArray, type: 'non-negative-array', message: '参数格式不正确' }
+  );
+  await categoryService.updateCategoryOrder(ctx.session.restaurant_id, orderArray);
+  ctx.status = 200;
+};
+
 exports.updateCategory = async ctx => {
   const { name } = ctx.request.body;
   ctx.verify(

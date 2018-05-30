@@ -9,6 +9,13 @@ exports.createCategory = async (restaurant_id, name) => {
   };
 };
 
+exports.updateCategoryOrder = async (restaurant_id, orderArray) => {
+  const categories = (await categoryModel.getAll(restaurant_id)).map(value => value.category_id);
+  assert(categories.length === orderArray.length, 'category数量不一致');
+  assert(orderArray.every(id => categories.includes(id)), '只能修改自己的分类');
+  await categoryModel.updateCategoryOrder(orderArray);
+};
+
 exports.updateCategory = async (id, name) => {
   assert(await exports.exist(id), '分类不存在');
   await categoryModel.updateCategory(id, name);
