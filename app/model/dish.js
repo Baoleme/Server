@@ -40,6 +40,7 @@ exports.getOne = async id => {
     category_id,
     name,
     price,
+    selling,
     spicy,
     specifications,
     image_url,
@@ -48,8 +49,11 @@ exports.getOne = async id => {
     FROM Dish
     WHERE dish_id = ?
   `;
-  const arr = await query(sql, [id]);
-  return arr.length ? arr[0] : null;
+  const [data] = await query(sql, [id]);
+  if (data) {
+    data.selling = Boolean(data.selling);
+  }
+  return data;
 };
 
 exports.getAll = async restaurant_id => {
@@ -67,6 +71,7 @@ exports.getAll = async restaurant_id => {
     tag
     FROM Dish
     WHERE restaurant_id = ?
+    AND selling = 1
   `;
   return query(sql, [restaurant_id]);
 };

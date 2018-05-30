@@ -18,6 +18,7 @@ exports.createOrder = async (customer_id, info) => {
     const dish = await dishService.getOne(one.dish_id);
     // 确认菜品存在
     assert(dish, `菜品${one.dish_id}不存在`);
+    assert(dish.selling, `菜品${one.dish_id}已下架`);
     // 确认菜品属于这个餐厅
     assert(dish.restaurant_id === info.restaurant_id, `菜品${one.dish_id}不属于餐厅${info.restaurant_id}`);
     dish.specifications = JSON.parse(dish.specifications);
