@@ -4,8 +4,8 @@ const assert = require('../../lib/assert');
 const restaurantService = require('./restaurantAccount');
 const _ = require('lodash');
 
-exports.getSelfDish = async restaurant_id => {
-  const categories = await categoryService.getAll(restaurant_id);
+exports.getSelfDish = async (restaurant_id, selling) => {
+  const categories = await categoryService.getAll(restaurant_id, selling);
   if (categories.length === 0) return [];
   const dishes = await dishModel.getAll(restaurant_id);
   if (dishes.length === 0) return [];
@@ -13,6 +13,7 @@ exports.getSelfDish = async restaurant_id => {
     dish.specifications = JSON.parse(dish.specifications);
     dish.image_url = JSON.parse(dish.image_url);
     dish.tag = JSON.parse(dish.tag);
+    dish.selling = Boolean(dish.selling);
   });
   const group = _.groupBy(dishes, 'category_id');
   const result = [];
@@ -36,6 +37,7 @@ exports.createDish = async (restaurant_id, info) => {
     category_id: info.category_id,
     name: info.name,
     price: info.price,
+    selling: true,
     spicy: info.spicy || 0
   };
   dish.specifications = info.specifications ? JSON.stringify(info.specifications) : '[]';
@@ -71,7 +73,7 @@ exports.deleteDish = async (restaurant_id, id) => {
 exports.getInfoAndDish = async id => {
   const result = await restaurantService.getInformationById(id);
   assert(result, '餐厅不存在');
-  result.dish = await exports.getSelfDish(id);
+  result.dish = await exports.getSelfDish(id, true);
   return result;
 };
 

@@ -56,7 +56,7 @@ exports.getOne = async id => {
   return data;
 };
 
-exports.getAll = async restaurant_id => {
+exports.getAll = async (restaurant_id, selling) => {
   const sql = `
     SELECT
     dish_id,
@@ -64,6 +64,7 @@ exports.getAll = async restaurant_id => {
     category_id,
     name,
     price,
+    selling,
     spicy,
     specifications,
     image_url,
@@ -71,7 +72,7 @@ exports.getAll = async restaurant_id => {
     tag
     FROM Dish
     WHERE restaurant_id = ?
-    AND selling = 1
+    ${selling ? 'AND selling = 1' : ''}
   `;
   return query(sql, [restaurant_id]);
 };
