@@ -57,8 +57,8 @@ exports.updateDish = async (restaurant_id, dish_id, info) => {
     assert(category, '分类不存在');
     assert(category.restaurant_id === restaurant_id, '这个分类不属于你');
   }
-  const dish = _.pick(info, ['category_id', 'name', 'price']);
-  const otherFields = _.mapValues(_.pick(info, ['specifications', 'image_url', 'description', 'tag']), JSON.stringify);
+  const dish = _.pick(info, ['category_id', 'name', 'price', 'selling', 'spicy', 'description']);
+  const otherFields = _.mapValues(_.pick(info, ['specifications', 'image_url', 'tag']), JSON.stringify);
   Object.assign(dish, otherFields);
   await dishModel.updateDish(dish_id, dish);
 };
