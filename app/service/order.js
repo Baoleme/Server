@@ -104,7 +104,7 @@ exports.pay = async (customer_id, order_id) => {
   assert(order, '订单不存在');
   assert(order.customer_id === customer_id, '只能支付自己的订单');
   const oldState = (await orderModel.getState(order_id, 1))[0].state;
-  assert(oldState !== orderModel.ORDER_STATE.CREATED, '无法支付该订单');
+  assert(oldState === orderModel.ORDER_STATE.CREATED, '无法支付该订单');
   await orderModel.updateState(order_id, orderModel.ORDER_STATE.PAID);
   await orderModel.updateOrder(order_id, {
     payment: 'DreamPay'
