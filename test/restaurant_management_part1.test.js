@@ -85,25 +85,110 @@ describe.only('Restaurant Management', async function () {
     it ('String validation', async function () {
       await ax.post('/table', ['中山大学']);
     });
+
     it ('String validation', async function () {
       await throws(() => ax.post('/table', 0),
-      ({ response: r }) => r.status === 400 && r.data.message === '数组格式不正确');
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === '数组格式不正确'
+      );
     });
+
     it ('String validation', async function () {
       await throws(() => ax.post('/table', 'saa'),
-      ({ response: r }) => r.status === 400 && r.data.message === '数组格式不正确');
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === '数组格式不正确'
+      );
+    });
+
+    it ('String validation', async function () {
+      await throws(() => ax.post('/table', ''),
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === '数组格式不正确'
+      );
     });
   });
 
   describe('Delete table', async function () {
     it('table id validation', async function () {
       await throws(() => ax.delete('/table', 1),
-        ({ response: r }) => r.status === 400 && r.data.message === '数组格式不正确');
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === '数组格式不正确'
+      );
 
       await throws(() => ax.delete('/table', -1),
-        ({ response: r }) => r.status === 400 && r.data.message === '数组格式不正确');
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === '数组格式不正确'
+      );
     });
   });
+
+  describe('Create category', async function () {
+    it ('Name validation', async function () {
+      await ax.post('/category', {
+        name: "中山大学"
+      });
+    });
+
+    it ('Name invalid', async function () {
+      await throws(() => ax.post('/category', {
+        name: ""
+      }),
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === 'name格式不正确'
+      );
+    });
+
+    it ('Name invalid', async function () {
+      await throws(() => ax.post('/category', {
+        name: 0
+      }),
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === 'name格式不正确'
+      );
+    });
+
+    it ('Name invalid', async function () {
+      await throws(
+        () => ax.post('/category', {
+        name: -1
+      }),
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === 'name格式不正确'
+      );
+    });
+  });
+
+  describe('Handle order', async function () {
+    it('state validation', async function () {
+      await throws(() => ax.put('/order/1', {
+        state: 1
+      }),
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === 'state格式不正确'
+      );
+    });
+
+    it('table id validation', async function () {
+      await throws(() => ax.put('/order/sadfa', {
+        state: 'accepted'
+      }),
+        ({ response: r }) => 
+          r.status === 400 && r.data.message === 'id格式不正确'
+      );
+    });
+  });
+
+  // describe('Get table', async function () {
+  //   it('id validation', async function () {
+  //     await throws(
+  //       () => ax.get('/table', 
+  //         -1
+  //       ),
+  //         ({ response: r }) =>
+  //           r.status === 400 && r.data.message === 'id格式不正确'
+  //     );
+  //   });
+  // });
 
   after(() => {
     server.end();
