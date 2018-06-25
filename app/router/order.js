@@ -7,6 +7,7 @@ router.post('/order', onlyCustomer, ctrl.createOrder);
 router.get('/order', onlyCustomer, ctrl.getCustomerOrder);
 router.post('/order/:id/payment', onlyCustomer, ctrl.pay);
 router.get('/restaurant/self/order', onlyRestaurant, ctrl.getRestaurantOrder);
+router.get('/restaurant/self/order/count', onlyRestaurant, ctrl.getRestaurantOrderCount);
 router.put('/order/:id', onlyRestaurant, ctrl.updateOrderState);
 
 module.exports = router;

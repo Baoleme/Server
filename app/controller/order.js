@@ -56,6 +56,10 @@ exports.getRestaurantOrder = async ctx => {
   ctx.body = await orderService.getRestaurantOrder(ctx.session.restaurant_id, page, number, state, keyword);
 };
 
+exports.getRestaurantOrderCount = async ctx => {
+  ctx.body = await orderService.getRestaurantOrderCount(ctx.session.restaurant_id);
+};
+
 exports.updateOrderState = async ctx => {
   const { id } = ctx.params;
   const { state } = ctx.request.body;

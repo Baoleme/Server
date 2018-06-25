@@ -110,6 +110,31 @@ exports.getRestaurantOrder = async (restaurant_id, offset, limit, state, keyword
   return res;
 };
 
+exports.getRestaurantOrderCount = async restaurant_id => {
+  const leftTime = new Date();
+  leftTime.setHours(0, 0, 0, 0);
+  const rightTime = new Date();
+  rightTime.setDate(rightTime.getDate() + 1);
+  rightTime.setHours(0, 0, 0, 0);
+  const sql = `
+    SELECT
+    r.state AS state,
+    COUNT(1) AS number
+    FROM \`Order\` o JOIN OrderRecord r
+    ON r.order_record_id = (
+      SELECT
+      MAX(r1.order_record_id)
+      FROM OrderRecord r1
+      WHERE r1.order_id = o.order_id
+    )
+    WHERE o.restaurant_id = ?
+    AND r.time >= ?
+    AND r.time < ?
+    GROUP BY r.state
+  `;
+  return query(sql, [restaurant_id, leftTime, rightTime]);
+};
+
 exports.getCustomerOrder = async (customer_id, page, limit) => {
   const sql = `
     SELECT

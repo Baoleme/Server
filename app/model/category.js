@@ -23,9 +23,7 @@ exports.updateCategoryOrder = async orderArray => {
     )
     WHERE category_id IN (? ${',?'.repeat(orderArray.length - 1)})
   `;
-  console.log(sql);
   const data = _.flatten(_.zip(orderArray, _.range(orderArray.length)));
-  console.log(data);
   return query(sql, [...data, ...orderArray]);
 };
 
