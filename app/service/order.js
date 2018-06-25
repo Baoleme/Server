@@ -135,6 +135,21 @@ exports.getRestaurantOrder = async (restaurant_id, page, number, state, keyword)
   };
 };
 
+exports.getRestaurantOrderCount = async restaurant_id => {
+  const count = orderModel.getRestaurantOrderCount(restaurant_id);
+  const result = {
+    created: 0,
+    paid: 0,
+    accepted: 0,
+    cancelled: 0,
+    completed: 0
+  };
+  for (const one of count) {
+    result[one.state] = one.number;
+  }
+  return result;
+};
+
 exports.updateOrderState = async (restaurant_id, order_id, state) => {
   const order = await exports.getOne(order_id);
   assert(order, '订单不存在');
