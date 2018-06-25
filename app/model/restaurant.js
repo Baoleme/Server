@@ -22,7 +22,7 @@ exports.getById = async restaurant_id => {
     description,
     phone,
     license_url,
-    address,
+    address
     FROM Restaurant
     WHERE restaurant_id = ?
   `;
