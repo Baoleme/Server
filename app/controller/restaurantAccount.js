@@ -66,13 +66,14 @@ exports.emailConfirm = async ctx => {
 };
 
 exports.updateInformation = async ctx => {
-  const info = _.pick(ctx.request.body, ['password', 'name', 'logo_url', 'description', 'phone']);
+  const info = _.pick(ctx.request.body, ['password', 'name', 'logo_url', 'description', 'phone', 'address']);
   ctx.verify(
     { data: info.password, type: 'string', require: false, message: 'password格式不正确' },
     { data: info.name, type: 'string', require: false, maxLength: 45, message: 'name格式不正确' },
     { data: info.logo_url, type: 'string', require: false, maxLength: 255, message: 'logo_url格式不正确' },
     { data: info.description, type: 'string', require: false, message: 'description格式不正确' },
-    { data: info.phone, type: 'string', require: false, maxLength: 11, message: 'phone格式不正确' }
+    { data: info.phone, type: 'string', require: false, maxLength: 11, message: 'phone格式不正确' },
+    { data: info.address, type: 'string', require: false, message: 'address格式不正确' }
   );
   if (info.password) {
     ctx.assert(
