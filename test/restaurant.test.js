@@ -3,7 +3,6 @@ const assert = require('assert');
 const FormData = require('form-data');
 const ax = require('./ax')();
 const db = require('../lib/db');
-const server = require('../index');
 const testEmail = 'zchangan@163.com';
 
 describe('Restaurant Account', async function () {
@@ -169,7 +168,8 @@ describe('Restaurant Account', async function () {
         logo_url: 'https://api.baoleme.andiedie.cn/files/default-logo.png',
         name: '1',
         phone: null,
-        restaurant_id: 3
+        restaurant_id: 3,
+        address: null
       });
     });
   });
@@ -220,7 +220,8 @@ describe('Restaurant Account', async function () {
         description: null,
         license_url: `http://localhost:8520/files/license/${testEmail}.docx`,
         logo_url: 'https://api.baoleme.andiedie.cn/files/default-logo.png',
-        phone: null
+        phone: null,
+        address: null
       });
     });
   });
@@ -252,9 +253,5 @@ describe('Restaurant Account', async function () {
     it('Logout before login', async function () {
       await ax.delete('/restaurant/session');
     });
-  });
-
-  after(() => {
-    server.end();
   });
 });

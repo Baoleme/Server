@@ -14,6 +14,7 @@ describe('Customer Account', async function () {
       }
     });
   });
+  
   describe('Login', async function () {
     it('Missing field', async function () {
       await throws(
@@ -21,7 +22,7 @@ describe('Customer Account', async function () {
         ({ response: r }) => r.status === 400 && r.data.message === 'code格式不正确'
       );
     });
-
+    
     it('Wrong code', async function () {
       process.env.NODE_ENV = 'development';
       await throws(
@@ -33,7 +34,7 @@ describe('Customer Account', async function () {
       process.env.NODE_ENV = 'test';
     });
 
-    it('Rigist code', async function () {
+    it('Regist code', async function () {
       await ax.post('/customer/session', {
         code: 'xxxxxx'
       });
