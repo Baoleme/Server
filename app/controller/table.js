@@ -1,7 +1,7 @@
 const tableService = require('../service/table');
 
 exports.getSelfTable = async ctx => {
-  ctx.body = await tableService.getAll(ctx.session.restaurant_id);
+  ctx.body = await tableService.getAllQrcode(ctx.session.restaurant_id);
 };
 
 exports.createTable = async ctx => {

@@ -12,7 +12,12 @@ fs.ensureDirSync(path.join(__dirname, '../../files/qrcode/'));
 exports.getAll = async id => {
   assert(await restaurantService.exist(id), '餐厅不存在');
   const tables = await tableModel.getAll(id);
-  return tables.map(one => `${systemConfig.apiUrl}/files/qrcode/${id}_${one.name}.jpg`);
+  return tables.map(one => one.name);
+};
+
+exports.getAllQrcode = async id => {
+  const tables = await exports.getAll(id);
+  return tables.map(one => `${systemConfig.apiUrl}/files/qrcode/${id}_${one}.jpg`);
 };
 
 exports.createTable = async (id, array) => {
