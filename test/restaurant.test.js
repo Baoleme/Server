@@ -4,6 +4,7 @@ const FormData = require('form-data');
 const ax = require('./ax')();
 const db = require('../lib/db');
 const testEmail = 'zchangan@163.com';
+// const server = require('../index');
 
 describe('Restaurant Account', async function () {
   before(async () => {
@@ -242,6 +243,73 @@ describe('Restaurant Account', async function () {
     });
   });
 
+  describe('Modify Restaurant information', async function () {
+    // const update = async info => {
+    //   const form = new FormData();
+    //   if (info.phone) form.append('phone', info.phone);
+    //   if (info.name) form.append('name', info.name);
+    //   if (info.password) form.append('password', info.password);
+    //   if (info.address) form.append('address', info.address);
+    //   if (info.logo_url) form.append('logo_url', info.logo_url);
+    //   if (info.description) form.append('description', info.description);
+    //   return ax.put('/restaurant/self', form, {
+    //     headers: form.getHeaders()
+    //   });
+    // };
+
+    it('Password Validation', async function () {
+      await throws(
+        () => ax.put('/restaurant/self/', {
+          password: '\\'
+        }), ({ response: r }) => r.status === 400 && r.data.message === 'password格式不正确');
+
+      await throws(
+        () => ax.put('/restaurant/self/', {
+          password: 1
+        }), ({ response: r }) => r.status === 400 && r.data.message === 'password格式不正确');
+    });
+
+    it('Name Validation', async function () {
+      await throws(
+        () => ax.put('/restaurant/self/', {
+          name: 111
+        }), ({ response: r }) => r.status === 400 && r.data.message === 'name格式不正确');
+    });
+
+    it('Logo_url Validation', async function () {
+      await throws(
+        () => ax.put('/restaurant/self/', {
+          logo_url: 111
+        }), ({ response: r }) => r.status === 400 && r.data.message === 'logo_url格式不正确');
+    });
+
+    it('Description Validation', async function () {
+      await throws(
+        () => ax.put('/restaurant/self/', {
+          description: 111
+        }), ({ response: r }) => r.status === 400 && r.data.message === 'description格式不正确');
+    });
+
+    it('Phone Validation', async function () {
+      await throws(
+        () => ax.put('/restaurant/self/', {
+          phone: 111
+        }), ({ response: r }) => r.status === 400 && r.data.message === 'phone格式不正确');
+
+      await throws(
+        () => ax.put('/restaurant/self/', {
+          phone: '1xxx'
+        }), ({ response: r }) => r.status === 400 && r.data.message === 'phone格式不正确');
+    });
+
+    it('Address Validation', async function () {
+      await throws(
+        () => ax.put('/restaurant/self/', {
+          address: 111
+        }), ({ response: r }) => r.status === 400 && r.data.message === 'address格式不正确');
+    });
+  });
+
   describe('Logout', async function () {
     it('Logout after login', async function () {
       await ax.post('/restaurant/session', {
@@ -254,4 +322,8 @@ describe('Restaurant Account', async function () {
       await ax.delete('/restaurant/session');
     });
   });
+
+  // after(() => {
+  //   server.end();
+  // });
 });

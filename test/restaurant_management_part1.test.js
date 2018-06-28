@@ -6,7 +6,7 @@ const db = require('../lib/db');
 const server = require('../index');
 const testEmail = 'zchangan@163.com';
 
-describe.only('Restaurant Management', async function () {
+describe('Restaurant Management', async function () {
   before(async () => {
     await db.transaction(async query => {
       const tables = await query('SHOW TABLES');
@@ -88,21 +88,21 @@ describe.only('Restaurant Management', async function () {
 
     it ('String validation', async function () {
       await throws(() => ax.post('/table', 0),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === '数组格式不正确'
       );
     });
 
     it ('String validation', async function () {
       await throws(() => ax.post('/table', 'saa'),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === '数组格式不正确'
       );
     });
 
     it ('String validation', async function () {
       await throws(() => ax.post('/table', ''),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === '数组格式不正确'
       );
     });
@@ -111,12 +111,12 @@ describe.only('Restaurant Management', async function () {
   describe('Delete table', async function () {
     it('table id validation', async function () {
       await throws(() => ax.delete('/table', 1),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === '数组格式不正确'
       );
 
       await throws(() => ax.delete('/table', -1),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === '数组格式不正确'
       );
     });
@@ -133,7 +133,7 @@ describe.only('Restaurant Management', async function () {
       await throws(() => ax.post('/category', {
         name: ""
       }),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === 'name格式不正确'
       );
     });
@@ -142,7 +142,7 @@ describe.only('Restaurant Management', async function () {
       await throws(() => ax.post('/category', {
         name: 0
       }),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === 'name格式不正确'
       );
     });
@@ -152,7 +152,7 @@ describe.only('Restaurant Management', async function () {
         () => ax.post('/category', {
         name: -1
       }),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === 'name格式不正确'
       );
     });
@@ -163,7 +163,7 @@ describe.only('Restaurant Management', async function () {
       await throws(() => ax.put('/order/1', {
         state: 1
       }),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === 'state格式不正确'
       );
     });
@@ -172,7 +172,7 @@ describe.only('Restaurant Management', async function () {
       await throws(() => ax.put('/order/sadfa', {
         state: 'accepted'
       }),
-        ({ response: r }) => 
+        ({ response: r }) =>
           r.status === 400 && r.data.message === 'id格式不正确'
       );
     });
@@ -181,7 +181,7 @@ describe.only('Restaurant Management', async function () {
   // describe('Get table', async function () {
   //   it('id validation', async function () {
   //     await throws(
-  //       () => ax.get('/table', 
+  //       () => ax.get('/table',
   //         -1
   //       ),
   //         ({ response: r }) =>
@@ -190,7 +190,7 @@ describe.only('Restaurant Management', async function () {
   //   });
   // });
 
-  after(() => {
-    server.end();
-  });
+  // after(() => {
+  //   server.end();
+  // });
 });

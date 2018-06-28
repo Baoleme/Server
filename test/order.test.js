@@ -71,8 +71,8 @@ describe('Customer Order', async function () {
       ]
     });
 
-    await ax.post('/table',
-      ['1', '2', '3']);
+    // await ax.post('/qrcode',
+    //   ['1', '2', '3']);
 
     await ax.delete('/restaurant/session');
 
@@ -198,7 +198,7 @@ describe('Customer Order', async function () {
           {
             dish_id: 1,
             specifications: [
-              
+
             ],
             count: 1
           }
@@ -408,7 +408,7 @@ describe('Customer Order', async function () {
           }
         ],
         remark: 'Nothing'
-      }), ({ response: r }) => r.status === 400 && r.data.message === '菜品3不存在');    
+      }), ({ response: r }) => r.status === 400 && r.data.message === '菜品3不存在');
     });
   });
 
@@ -479,7 +479,7 @@ describe('Customer Order', async function () {
       assert.deepStrictEqual(data[0].customer, {
         customer_id: 1
       });
-      assert.deepStrictEqual(data[0].restaurant, { 
+      assert.deepStrictEqual(data[0].restaurant, {
         email: testEmail,
         confirm_email: 0,
         name: '1',
@@ -487,7 +487,7 @@ describe('Customer Order', async function () {
         description: null,
         phone: null,
         license_url: 'http://localhost:8520/files/license/zchangan@163.com.docx',
-        restaurant_id: 1 
+        restaurant_id: 1
       });
       assert.deepStrictEqual(data[0].remark, 'Nothing');
       assert.deepStrictEqual(data[0].remark, 'Nothing');
@@ -516,7 +516,7 @@ describe('Customer Order', async function () {
         restaurant_id: 1,
         address: null,
         dish: [
-          { 
+          {
             category_id: 1,
               dish: [
                {
