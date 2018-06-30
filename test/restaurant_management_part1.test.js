@@ -119,6 +119,11 @@ describe('Restaurant Management', async function () {
         ({ response: r }) =>
           r.status === 400 && r.data.message === '数组格式不正确'
       );
+
+      await throws(() => ax.delete('/table', 'hahaha'),
+        ({ response: r }) =>
+          r.status === 400 && r.data.message === '数组格式不正确'
+      );
     });
   });
 
@@ -162,6 +167,15 @@ describe('Restaurant Management', async function () {
     it('state validation', async function () {
       await throws(() => ax.put('/order/1', {
         state: 1
+      }),
+        ({ response: r }) =>
+          r.status === 400 && r.data.message === 'state格式不正确'
+      );
+    });
+
+    it('state validation', async function () {
+      await throws(() => ax.put('/order/1', {
+        state: 'dasdas'
       }),
         ({ response: r }) =>
           r.status === 400 && r.data.message === 'state格式不正确'
