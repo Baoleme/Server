@@ -1,11 +1,22 @@
 language: node_js
 node_js:
 - '9'
+services:
+- mysql
+
+before_script:
+# change password
+- echo "USE mysql;\nUPDATE user SET password=PASSWORD('localhostmysql') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
+# change charset
+- mysql -uroot -plocalhostmysql -e 'SET character_set_server=utf8mb4;'
+- mysql -uroot -plocalhostmysql -e 'SET collation_server=utf8mb4_unicode_ci;'
+# create database
+- mysql -uroot -plocalhostmysql < script/createDB.sql
 
 install: npm install
 
-# script: npm test
-script: npm version
+script: npm test
+# script: npm version
 
 addons:
   ssh_known_hosts: 119.29.252.110
