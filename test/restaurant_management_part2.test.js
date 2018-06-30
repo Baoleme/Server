@@ -53,6 +53,9 @@ describe('Restaurant Management Part2', async function () {
     });
   });
 
+  // TODO
+  // 1. category_id是否存在
+  // 2. category_id是否属于该restaurant
   describe('Add dish', async function () {
     it ('Missing field', async function () {
       await throws(() => ax.post('/dish', {
@@ -448,6 +451,10 @@ describe('Restaurant Management Part2', async function () {
     });
   });
 
+  // TODO
+  // 1. dish_id是否存在
+  // 2. category_id是否存在
+  // 3. category_id是否属于该restaurant
   describe('Update dish', async function () {
     it ('Dish id validation', async function () {
       await throws(() => ax.put('/dish/-1'),
@@ -779,6 +786,8 @@ describe('Restaurant Management Part2', async function () {
 
   });
 
+  // TODO
+  // 1. dish_id是否属于该restaurant
   describe('Delete dish', async function () {
     it('Dish id validation', async function () {
       await throws(() => ax.delete('/dish/-1'),
@@ -793,6 +802,9 @@ describe('Restaurant Management Part2', async function () {
     });
   });
 
+  // TODO
+  // 1. category_id是否存在
+  // 2. dump参数的category_id是否存在
   describe('Delete category', async function () {
     it('Category id validation', async function () {
       await throws(() => ax.delete('/category/-1'),
@@ -825,6 +837,7 @@ describe('Restaurant Management Part2', async function () {
       });
     });
   });
+
   // after(() => {
   //   server.end();
   // });
