@@ -80,6 +80,9 @@ describe('Restaurant Management Part3', async function () {
     });
   });
 
+  // TODO
+  // 1. 修改前、后category的数量是否相等
+  // 2. category_id是否存在
   describe('Update category order', async function () {
     it('Category id validation', async function () {
       await throws(() => ax.put('/category', ['3', '1', '2']),
@@ -94,6 +97,8 @@ describe('Restaurant Management Part3', async function () {
     });
   });
 
+  // TODO
+  // 1. category_id是否存在
   describe('Update category name', async function () {
     it('Category id validation', async function () {
       await throws(() => ax.put('/category/-1', {
@@ -128,16 +133,30 @@ describe('Restaurant Management Part3', async function () {
     });
   });
 
-  // TODO: 怎么印证获取的分类和菜品列表与预期结果相同
-  // describe('Get category and dish list', async function () {
-  //   it('Category and dish list validation', async function () {
-  //     const { data } =  await ax.get('/dish');
-  //     assert.deepStrictEqual(data, {
-  //       restaurant_id: 1
-  //     });
-  //   });
-  //  });
-  //
+  describe('Get order count', async function () {
+    it ('Order count validation', async function () {
+      const { data } = await ax.get('/restaurant/self/order/count');
+      assert.deepStrictEqual(data, {
+        created: 0,
+        paid: 0,
+        accepted: 0,
+        cancelled: 0,
+        completed: 0
+      });
+    });
+  });
+
+  // TODO
+  // 1. get完整的列表
+  describe('Get category and dish list', async function () {
+    it('Category and dish list validation', async function () {
+      const { data } =  await ax.get('/dish');
+      assert.deepStrictEqual(data[0].restaurant_id, 1);
+      assert.deepStrictEqual(data[0].category_id, 3);
+      assert.deepStrictEqual(data[0].name, 'category3');
+    });
+   });
+
   // after(() => {
   //   server.end();
   // });
