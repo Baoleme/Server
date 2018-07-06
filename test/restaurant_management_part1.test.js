@@ -175,7 +175,7 @@ describe('Restaurant Management', async function () {
 
     it('state validation', async function () {
       await throws(() => ax.put('/order/1', {
-        state: 'dasdas'
+        state: 14324
       }),
         ({ response: r }) =>
           r.status === 400 && r.data.message === 'state格式不正确'
