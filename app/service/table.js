@@ -22,13 +22,16 @@ exports.getAllQrcode = async id => {
 
 exports.createTable = async (id, array) => {
   assert(await restaurantService.exist(id), '餐厅不存在');
+  const result = [];
   for (const one of array) {
     const filePath = path.join(__dirname, `../../files/qrcode/${id}_${one}.jpg`);
     if (!fs.existsSync(filePath)) {
       await saveQrcode(id, one, filePath);
     }
+    result.push(`${systemConfig.apiUrl}/files/qrcode/${id}_${one}.jpg`);
   }
   await tableModel.createTable(id, array);
+  return result;
 };
 
 exports.deleteTable = async (id, array) => {
