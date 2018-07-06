@@ -73,7 +73,7 @@ exports.deleteDish = async (restaurant_id, id) => {
 exports.getInfoAndDish = async id => {
   const result = await restaurantService.getInformationById(id);
   assert(result, '餐厅不存在');
-  result.dish = await exports.getSelfDish(id, true);
+  result.dish = await exports.getSelfDish(id);
   return result;
 };
 
