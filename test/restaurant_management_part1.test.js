@@ -81,51 +81,51 @@ describe('Restaurant Management', async function () {
 
   });
 
-  describe('Add table', async function () {
-    it ('String validation', async function () {
-      await ax.post('/table', ['中山大学']);
-    });
+  // describe('Add table', async function () {
+  //   it ('String validation', async function () {
+  //     await ax.post('/table', ['中山大学']);
+  //   });
 
-    it ('String validation', async function () {
-      await throws(() => ax.post('/table', 0),
-        ({ response: r }) =>
-          r.status === 400 && r.data.message === '数组格式不正确'
-      );
-    });
+  //   it ('String validation', async function () {
+  //     await throws(() => ax.post('/table', 0),
+  //       ({ response: r }) =>
+  //         r.status === 400 && r.data.message === '数组格式不正确'
+  //     );
+  //   });
 
-    it ('String validation', async function () {
-      await throws(() => ax.post('/table', 'saa'),
-        ({ response: r }) =>
-          r.status === 400 && r.data.message === '数组格式不正确'
-      );
-    });
+  //   it ('String validation', async function () {
+  //     await throws(() => ax.post('/table', 'saa'),
+  //       ({ response: r }) =>
+  //         r.status === 400 && r.data.message === '数组格式不正确'
+  //     );
+  //   });
 
-    it ('String validation', async function () {
-      await throws(() => ax.post('/table', ''),
-        ({ response: r }) =>
-          r.status === 400 && r.data.message === '数组格式不正确'
-      );
-    });
-  });
+  //   it ('String validation', async function () {
+  //     await throws(() => ax.post('/table', ''),
+  //       ({ response: r }) =>
+  //         r.status === 400 && r.data.message === '数组格式不正确'
+  //     );
+  //   });
+  // });
 
-  describe('Delete table', async function () {
-    it('table id validation', async function () {
-      await throws(() => ax.delete('/table', 1),
-        ({ response: r }) =>
-          r.status === 400 && r.data.message === '数组格式不正确'
-      );
+  // describe('Delete table', async function () {
+  //   it('table id validation', async function () {
+  //     await throws(() => ax.delete('/table', 1),
+  //       ({ response: r }) =>
+  //         r.status === 400 && r.data.message === '数组格式不正确'
+  //     );
 
-      await throws(() => ax.delete('/table', -1),
-        ({ response: r }) =>
-          r.status === 400 && r.data.message === '数组格式不正确'
-      );
+  //     await throws(() => ax.delete('/table', -1),
+  //       ({ response: r }) =>
+  //         r.status === 400 && r.data.message === '数组格式不正确'
+  //     );
 
-      await throws(() => ax.delete('/table', 'hahaha'),
-        ({ response: r }) =>
-          r.status === 400 && r.data.message === '数组格式不正确'
-      );
-    });
-  });
+  //     await throws(() => ax.delete('/table', 'hahaha'),
+  //       ({ response: r }) =>
+  //         r.status === 400 && r.data.message === '数组格式不正确'
+  //     );
+  //   });
+  // });
 
   describe('Create category', async function () {
     it ('Name validation', async function () {
