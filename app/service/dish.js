@@ -5,9 +5,9 @@ const restaurantService = require('./restaurantAccount');
 const _ = require('lodash');
 
 exports.getSelfDish = async (restaurant_id, selling) => {
-  const categories = await categoryService.getAll(restaurant_id, selling);
+  const categories = await categoryService.getAll(restaurant_id);
   if (categories.length === 0) return [];
-  const dishes = await dishModel.getAll(restaurant_id);
+  const dishes = await dishModel.getAll(restaurant_id, selling);
   if (dishes.length === 0) return [];
   dishes.forEach(dish => {
     dish.specifications = JSON.parse(dish.specifications);
