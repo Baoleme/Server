@@ -6,6 +6,7 @@ cd /root/baoleme/server
 echo ---------------------------------------------
 echo                  git pull
 echo ---------------------------------------------
+git checkout -- package-lock.json
 git pull
 echo ---------------------------------------------
 echo            install dependencies
