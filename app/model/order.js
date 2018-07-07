@@ -51,7 +51,7 @@ exports.getState = async (order_id, limit) => {
     time
     FROM OrderRecord
     WHERE order_id = ?
-    ORDER BY time DESC
+    ORDER BY order_record_id DESC
     ${limit ? 'LIMIT ' + limit : ''}
   `;
   return query(sql, [order_id]);
