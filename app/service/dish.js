@@ -8,7 +8,6 @@ exports.getSelfDish = async (restaurant_id, selling) => {
   const categories = await categoryService.getAll(restaurant_id);
   if (categories.length === 0) return [];
   const dishes = await dishModel.getAll(restaurant_id, selling);
-  if (dishes.length === 0) return [];
   dishes.forEach(dish => {
     dish.specifications = JSON.parse(dish.specifications);
     dish.image_url = JSON.parse(dish.image_url);
@@ -22,7 +21,7 @@ exports.getSelfDish = async (restaurant_id, selling) => {
       category_id: category.category_id,
       name: category.name,
       restaurant_id: category.restaurant_id,
-      dish: group[category.category_id]
+      dish: group[category.category_id] || []
     });
   }
   return result;
