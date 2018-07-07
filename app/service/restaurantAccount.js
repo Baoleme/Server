@@ -35,7 +35,7 @@ exports.sendConfirmEmail = async restaurant_id => {
   const restaurant = await exports.getInformationById(restaurant_id);
   assert(!restaurant.confirm_email, '邮箱已经激活，请勿重复操作');
   const cipher = encipher(`${restaurant_id}|${new Date().getTime()}`);
-  const link = `${systemConfig.apiUrl}/restaurant/emailConfirm?cipher=${cipher}`;
+  const link = `${systemConfig.apiUrl}/restaurant/emailConfirm?cipher=${cipher}&onSuccess=${mailConfig.onSuccessLink}`;
   lastLink = link;
   const html = fs.readFileSync(path.resolve(__dirname, '../../lib/emailTemplate.html'), 'utf-8')
     .replace('{{NAME}}', restaurant.name)
