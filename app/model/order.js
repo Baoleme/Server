@@ -98,7 +98,7 @@ exports.getRestaurantOrder = async (restaurant_id, offset, limit, state, keyword
     WHERE o.restaurant_id = ?
     AND r.state IN (?${',?'.repeat(state.length - 1)})
     ${searchSQL}
-    ORDER BY FIELD(r.state${',?'.repeat(state.length)})
+    ORDER BY FIELD(r.state${',?'.repeat(state.length)}), o.order_id DESC
     LIMIT ?, ?
   `;
   const data = [restaurant_id, ...state, ...searchData, ...state, offset, limit];
