@@ -62,6 +62,8 @@ exports.getRestaurantOrderCount = async ctx => {
     from = new Date(0);
     to = new Date();
   } else {
+    from = new Date(from);
+    to = new Date(to);
     ctx.verify(
       { data: from, type: 'date', message: 'from格式不正确' },
       { data: to, type: 'date', message: 'to格式不正确' }
