@@ -27,10 +27,10 @@ exports.updateCategory = async ctx => {
 
 exports.deleteCategory = async ctx => {
   const id = ctx.params.id;
-  const dumpDesId = ctx.query.dump;
+  const dumpDesId = ctx.query.dump ? Number(ctx.query.dump) : null;
   ctx.verify(
     { data: Number(id), type: 'positive', message: 'id格式不正确' },
-    { data: Number(dumpDesId), type: 'positive', require: false, message: 'dump格式不正确' }
+    { data: dumpDesId, type: 'positive', require: false, message: 'dump格式不正确' }
   );
   if (dumpDesId) await categoryService.dumpTo(id, dumpDesId);
   await categoryService.deleteCategory(id);
