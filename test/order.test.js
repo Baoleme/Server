@@ -3,8 +3,6 @@ const assert = require('assert');
 const FormData = require('form-data');
 const ax = require('./ax')();
 const db = require('../lib/db');
-const server = require('../index');
-const getAccessToken = require('../lib/getAccessToken');
 const testEmail = 'zchangan@163.com';
 
 describe('Customer Order', async function () {
@@ -328,7 +326,7 @@ describe('Customer Order', async function () {
       }), ({ response: r }) => r.status === 400 && r.data.message === 'dish中有多余字段');
     });
 
-    /*it('Order validation', async function () {
+    /* it('Order validation', async function () {
       // TODO:
       // 2. 确认菜品属于该餐厅
       // 3. 确认菜品正在销售
@@ -411,7 +409,7 @@ describe('Customer Order', async function () {
         ],
         remark: 'Nothing'
       }), ({ response: r }) => r.status === 400 && r.data.message === '菜品3不存在');
-    });*/
+    }); */
   });
 
   // post '/order/{id}/payment'
@@ -434,14 +432,14 @@ describe('Customer Order', async function () {
         ({ response: r }) => r.status === 400 && r.data.message === '订单不存在');
     });
     // TODO
-    /*it('Pay', async function () {
+    /* it('Pay', async function () {
       await ax.post('order/1/payment', {
           code: 'xxxxxx'
       });
-    });*/
+    }); */
   });
   // get '/order'
-  describe('Get order lists', async function() {
+  describe('Get order lists', async function () {
     it('page number validation', async function () {
       await throws(() => ax.get('/order', {
         params: {
@@ -461,7 +459,7 @@ describe('Customer Order', async function () {
     });
 
     // TODO
-    /*it('order lists validation', async function () {
+    /* it('order lists validation', async function () {
       const { data } = await ax.get('/order', {
         params: {
           page: 0,
@@ -495,7 +493,7 @@ describe('Customer Order', async function () {
       });
       assert.deepStrictEqual(data[0].remark, 'Nothing');
       assert.deepStrictEqual(data[0].remark, 'Nothing');
-    });*/
+    }); */
   });
 
   // get '/restaurant/{id}'
@@ -522,47 +520,47 @@ describe('Customer Order', async function () {
         dish: [
           {
             category_id: 1,
-              dish: [
-               {
-                 category_id: 1,
-                 description: 'string',
-                 dish_id: 1,
-                 image_url: [
-                   'string'
-                 ],
-                 name: 'dish1',
-                 price: 1,
-                 restaurant_id: 1,
-                 selling: true,
-                 specifications: [
-                   {
-                     default: 0,
-                     name: 'spe1',
-                     options: [
-                       {
-                          delta: 0,
-                          name: 'string'
-                       }
-                     ],
-                     require: true
-                   }
-                 ],
-                 spicy: 0,
-                 tag: [
-                   'string'
-                 ]
-               }
-             ],
-             name: '1234',
-             restaurant_id: 1
-           }
-         ]
+            dish: [
+              {
+                category_id: 1,
+                description: 'string',
+                dish_id: 1,
+                image_url: [
+                  'string'
+                ],
+                name: 'dish1',
+                price: 1,
+                restaurant_id: 1,
+                selling: true,
+                specifications: [
+                  {
+                    default: 0,
+                    name: 'spe1',
+                    options: [
+                      {
+                        delta: 0,
+                        name: 'string'
+                      }
+                    ],
+                    require: true
+                  }
+                ],
+                spicy: 0,
+                tag: [
+                  'string'
+                ]
+              }
+            ],
+            name: '1234',
+            restaurant_id: 1
+          }
+        ]
       });
     });
   });
 
   // get '/restaurant/{id}/table' 转交给restaurant测试
-  /*describe('Get restaurant table lists', async function () {
+  /* describe('Get restaurant table lists', async function () {
     it('Restaurant id validation', async function () {
       await throws(
         () => ax.get('/restaurant/-1/table'),
@@ -576,5 +574,5 @@ describe('Customer Order', async function () {
         ['1', '2', '3']
       );
     });
-  });*/
+  }); */
 });

@@ -3,8 +3,6 @@ const assert = require('assert');
 const FormData = require('form-data');
 const ax = require('./ax')();
 const db = require('../lib/db');
-const server = require('../index');
-const testEmail = 'zchangan@163.com';
 
 describe('Restaurant Management Part2', async function () {
   before(async () => {
@@ -53,6 +51,10 @@ describe('Restaurant Management Part2', async function () {
       name: 'category3'
     });
 
+    await ax.post('/category', {
+      name: 'category4'
+    });
+
     await ax.post('/dish', {
       'category_id': 1,
       'name': 'dish1',
@@ -82,7 +84,7 @@ describe('Restaurant Management Part2', async function () {
   });
 
   describe('Add dish', async function () {
-    it ('Missing field', async function () {
+    it('Missing field', async function () {
       await throws(() => ax.post('/dish', {
         name: 'abcd',
         price: 123
@@ -102,7 +104,7 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'price格式不正确');
     });
 
-    it ('Category id validation', async function () {
+    it('Category id validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: -1,
         name: 'abcd',
@@ -111,7 +113,7 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'category_id格式不正确');
 
       await throws(() => ax.post('/dish', {
-        category_id: "string",
+        category_id: 'string',
         name: 'abcd',
         price: 123
       }),
@@ -125,7 +127,7 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === '分类不存在');
     });
 
-    it ('Name validation', async function () {
+    it('Name validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
         name: 123,
@@ -148,19 +150,19 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'name格式不正确');
     });
 
-    it ('Price validation', async function () {
+    it('Price validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
-        price: "string"
+        name: 'abcd',
+        price: 'string'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'price格式不正确');
     });
 
-    it ('Spicy validation', async function () {
+    it('Spicy validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         spicy: -10
       }),
@@ -168,25 +170,25 @@ describe('Restaurant Management Part2', async function () {
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
-        spicy: "abcd"
+        spicy: 'abcd'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'spicy格式不正确');
     });
 
-    it ('Image url validation', async function () {
+    it('Image url validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
-        image_url: "string"
+        image_url: 'string'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'image_url格式不正确');
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         image_url: [
           123, 456, 789
@@ -195,28 +197,28 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'image_url格式不正确');
     });
 
-    it ('Description validation', async function () {
+    it('Description validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         description: 123456
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'description格式不正确');
     });
 
-    it ('Tag validation', async function () {
+    it('Tag validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
-        tag: "string"
+        tag: 'string'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'tag格式不正确');
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         tag: [
           123, 456, 789
@@ -225,20 +227,20 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'tag格式不正确');
     });
 
-    it ('Specifications name validation', async function () {
+    it('Specifications name validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": 123,
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 123,
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -248,17 +250,17 @@ describe('Restaurant Management Part2', async function () {
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": '1'.repeat(46),
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': '1'.repeat(46),
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -268,17 +270,17 @@ describe('Restaurant Management Part2', async function () {
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": '',
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': '',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -287,20 +289,20 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'specifications.name格式不正确');
     });
 
-    it ('Specifications require validation', async function () {
+    it('Specifications require validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": "dish1",
-            "require": 100,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': 100,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -310,17 +312,17 @@ describe('Restaurant Management Part2', async function () {
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": "dish1",
-            "require": "yes",
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': 'yes',
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -329,20 +331,20 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'specifications.require格式不正确');
     });
 
-    it ('Specifications default validation', async function () {
+    it('Specifications default validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": -100,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': -100,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -352,17 +354,17 @@ describe('Restaurant Management Part2', async function () {
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": "abc",
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 'abc',
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -371,20 +373,20 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'specifications.default格式不正确');
     });
 
-    it ('Specifications options validation', async function () {
+    it('Specifications options validation', async function () {
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": 123,
-                "delta": 0
+                'name': 123,
+                'delta': 0
               }
             ]
           }
@@ -394,17 +396,17 @@ describe('Restaurant Management Part2', async function () {
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": '1'.repeat(46),
-                "delta": 0
+                'name': '1'.repeat(46),
+                'delta': 0
               }
             ]
           }
@@ -414,17 +416,17 @@ describe('Restaurant Management Part2', async function () {
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": '',
-                "delta": 0
+                'name': '',
+                'delta': 0
               }
             ]
           }
@@ -434,17 +436,17 @@ describe('Restaurant Management Part2', async function () {
 
       await throws(() => ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": "string"
+                'name': 'option',
+                'delta': 'string'
               }
             ]
           }
@@ -456,18 +458,18 @@ describe('Restaurant Management Part2', async function () {
     it('Correct usecase validation', async function () {
       ax.post('/dish', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         spicy: 0,
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -484,7 +486,7 @@ describe('Restaurant Management Part2', async function () {
   });
 
   describe('Update dish', async function () {
-    it ('Dish id validation', async function () {
+    it('Dish id validation', async function () {
       await throws(() => ax.put('/dish/-1'),
         ({ response: r }) => r.status === 400 && r.data.message === 'id格式不正确');
 
@@ -493,19 +495,19 @@ describe('Restaurant Management Part2', async function () {
 
       await throws(() => ax.put('/dish/5', {
         category_id: 4,
-        name: "newName"
+        name: 'newName'
       }),
-       ({ response: r }) => r.status === 400 && r.data.message === '菜品不存在');
+      ({ response: r }) => r.status === 400 && r.data.message === '菜品不存在');
     });
 
-    it ('Category id validation', async function () {
+    it('Category id validation', async function () {
       await throws(() => ax.put('/dish/2', {
         category_id: -1
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'category_id格式不正确');
 
       await throws(() => ax.put('/dish/2', {
-        category_id: "string"
+        category_id: 'string'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'category_id格式不正确');
 
@@ -515,7 +517,7 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === '分类不存在');
     });
 
-    it ('Name validation', async function () {
+    it('Name validation', async function () {
       await throws(() => ax.put('/dish/2', {
         name: 123
       }),
@@ -532,40 +534,40 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'name格式不正确');
     });
 
-    it ('Price validation', async function () {
+    it('Price validation', async function () {
       await throws(() => ax.put('/dish/2', {
-        price: "string"
+        price: 'string'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'price格式不正确');
     });
 
-    it ('Selling validation', async function () {
+    it('Selling validation', async function () {
       await throws(() => ax.put('/dish/2', {
         selling: 123
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'selling格式不正确');
 
       await throws(() => ax.put('/dish/2', {
-        selling: "string"
+        selling: 'string'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'selling格式不正确');
     });
 
-    it ('Spicy validation', async function () {
+    it('Spicy validation', async function () {
       await throws(() => ax.put('/dish/2', {
         spicy: -10
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'spicy格式不正确');
 
       await throws(() => ax.put('/dish/2', {
-        spicy: "abcd"
+        spicy: 'abcd'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'spicy格式不正确');
     });
 
-    it ('Image url validation', async function () {
+    it('Image url validation', async function () {
       await throws(() => ax.put('/dish/2', {
-        image_url: "string"
+        image_url: 'string'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'image_url格式不正确');
 
@@ -577,16 +579,16 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'image_url格式不正确');
     });
 
-    it ('Description validation', async function () {
+    it('Description validation', async function () {
       await throws(() => ax.put('/dish/2', {
         description: 123456
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'description格式不正确');
     });
 
-    it ('Tag validation', async function () {
+    it('Tag validation', async function () {
       await throws(() => ax.put('/dish/2', {
-        tag: "string"
+        tag: 'string'
       }),
       ({ response: r }) => r.status === 400 && r.data.message === 'tag格式不正确');
 
@@ -598,17 +600,17 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'tag格式不正确');
     });
 
-    it ('Specifications name validation', async function () {
+    it('Specifications name validation', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": 123,
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 123,
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -619,13 +621,13 @@ describe('Restaurant Management Part2', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": '',
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': '',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -636,13 +638,13 @@ describe('Restaurant Management Part2', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": '1'.repeat(46),
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': '1'.repeat(46),
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -651,17 +653,17 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'specifications.name格式不正确');
     });
 
-    it ('Specifications require validation', async function () {
+    it('Specifications require validation', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": "dish1",
-            "require": 100,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': 100,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -672,13 +674,13 @@ describe('Restaurant Management Part2', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": "dish1",
-            "require": "yes",
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': 'yes',
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -687,17 +689,17 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'specifications.require格式不正确');
     });
 
-    it ('Specifications default validation', async function () {
+    it('Specifications default validation', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": -100,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': -100,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -708,13 +710,13 @@ describe('Restaurant Management Part2', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": "abc",
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 'abc',
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -723,17 +725,17 @@ describe('Restaurant Management Part2', async function () {
       ({ response: r }) => r.status === 400 && r.data.message === 'specifications.default格式不正确');
     });
 
-    it ('Specifications options validation', async function () {
+    it('Specifications options validation', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": 123,
-                "delta": 0
+                'name': 123,
+                'delta': 0
               }
             ]
           }
@@ -744,13 +746,13 @@ describe('Restaurant Management Part2', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": '1'.repeat(46),
-                "delta": 0
+                'name': '1'.repeat(46),
+                'delta': 0
               }
             ]
           }
@@ -761,13 +763,13 @@ describe('Restaurant Management Part2', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": '',
-                "delta": 0
+                'name': '',
+                'delta': 0
               }
             ]
           }
@@ -778,13 +780,13 @@ describe('Restaurant Management Part2', async function () {
       await throws(() => ax.put('/dish/2', {
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": "string"
+                'name': 'option',
+                'delta': 'string'
               }
             ]
           }
@@ -796,19 +798,19 @@ describe('Restaurant Management Part2', async function () {
     it('Correct usecase validation', async function () {
       ax.put('/dish/2', {
         category_id: 1,
-        name: "abcd",
+        name: 'abcd',
         price: 123,
         selling: true,
         spicy: 0,
         specifications: [
           {
-            "name": "dish1",
-            "require": true,
-            "default": 0,
-            "options": [
+            'name': 'dish1',
+            'require': true,
+            'default': 0,
+            'options': [
               {
-                "name": "option",
-                "delta": 0
+                'name': 'option',
+                'delta': 0
               }
             ]
           }
@@ -844,20 +846,25 @@ describe('Restaurant Management Part2', async function () {
     });
 
     it('Category dump validation', async function () {
-      await throws(() => ax.delete('/category/1', {
-        dump: 1
-      }),
-        ({ response: r }) => r.status === 400 && r.data.message === 'dump格式不正确');
+      await ax.delete('/category/4', {
+        params: {
+          dump: 1
+        }
+      });
 
       await throws(() => ax.delete('/category/1', {
-        dump: -100
+        params: {
+          dump: -100
+        }
       }),
-        ({ response: r }) => r.status === 400 && r.data.message === 'dump格式不正确');
+      ({ response: r }) => r.status === 400 && r.data.message === 'dump格式不正确');
 
       await throws(() => ax.delete('/category/1', {
-        dump: "string"
+        params: {
+          dump: 'string'
+        }
       }),
-        ({ response: r }) => r.status === 400 && r.data.message === 'dump格式不正确');
+      ({ response: r }) => r.status === 400 && r.data.message === 'dump格式不正确');
     });
   });
 
@@ -884,19 +891,19 @@ describe('Restaurant Management Part2', async function () {
   describe('Update category name', async function () {
     it('Category id validation', async function () {
       await throws(() => ax.put('/category/-1', {
-          name: 'newCategory'
-        }),
-        ({ response: r }) => r.status === 400 && r.data.message === 'id格式不正确');
+        name: 'newCategory'
+      }),
+      ({ response: r }) => r.status === 400 && r.data.message === 'id格式不正确');
 
       await throws(() => ax.put('/category/abcd', {
-          name: 'newCategory'
-        }),
-        ({ response: r }) => r.status === 400 && r.data.message === 'id格式不正确');
+        name: 'newCategory'
+      }),
+      ({ response: r }) => r.status === 400 && r.data.message === 'id格式不正确');
 
       await throws(() => ax.put('/category/4', {
-          name: 'newCategory'
-       }),
-        ({ response: r }) => r.status === 400 && r.data.message === '分类不存在');
+        name: 'newCategory'
+      }),
+      ({ response: r }) => r.status === 400 && r.data.message === '分类不存在');
     });
 
     it('Category name validation', async function () {
@@ -921,7 +928,7 @@ describe('Restaurant Management Part2', async function () {
   });
 
   describe('Get order count', async function () {
-    it ('Order count validation', async function () {
+    it('Order count validation', async function () {
       const { data } = await ax.get('/restaurant/self/order/count');
       assert.deepStrictEqual(data, {
         created: 0,
@@ -935,10 +942,10 @@ describe('Restaurant Management Part2', async function () {
 
   describe('Get category and dish list', async function () {
     it('Category and dish list validation', async function () {
-      const { data } =  await ax.get('/dish');
+      const { data } = await ax.get('/dish');
       assert.deepStrictEqual(data[0].restaurant_id, 1);
       assert.deepStrictEqual(data[0].category_id, 3);
       assert.deepStrictEqual(data[0].name, 'category3');
     });
-   });
+  });
 });

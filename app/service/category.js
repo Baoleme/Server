@@ -27,6 +27,7 @@ exports.deleteCategory = async id => {
 };
 
 exports.dumpTo = async (from, to) => {
+  assert(from !== to, '被删除分类和dump分类不能是同一个');
   assert(await exports.exist(from), '分类不存在');
   assert(await exports.exist(to), 'dump目标分类不存在');
   await categoryModel.dumpTo(from, to);

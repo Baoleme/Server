@@ -4,7 +4,6 @@ const FormData = require('form-data');
 const ax = require('./ax')();
 const db = require('../lib/db');
 const testEmail = 'zchangan@163.com';
-// const server = require('../index');
 
 describe('Restaurant Account', async function () {
   before(async () => {
