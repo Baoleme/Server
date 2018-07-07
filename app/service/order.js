@@ -135,8 +135,8 @@ exports.getRestaurantOrder = async (restaurant_id, page, number, state, keyword)
   };
 };
 
-exports.getRestaurantOrderCount = async restaurant_id => {
-  const count = await orderModel.getRestaurantOrderCount(restaurant_id);
+exports.getRestaurantOrderCount = async (restaurant_id, from, to) => {
+  const count = await orderModel.getRestaurantOrderCount(restaurant_id, from, to);
   const result = {
     created: 0,
     paid: 0,

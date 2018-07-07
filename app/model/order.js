@@ -110,12 +110,7 @@ exports.getRestaurantOrder = async (restaurant_id, offset, limit, state, keyword
   return res;
 };
 
-exports.getRestaurantOrderCount = async restaurant_id => {
-  const leftTime = new Date();
-  leftTime.setHours(0, 0, 0, 0);
-  const rightTime = new Date();
-  rightTime.setDate(rightTime.getDate() + 1);
-  rightTime.setHours(0, 0, 0, 0);
+exports.getRestaurantOrderCount = async (restaurant_id, from, to) => {
   const sql = `
     SELECT
     r.state AS state,
@@ -132,7 +127,7 @@ exports.getRestaurantOrderCount = async restaurant_id => {
     AND r.time < ?
     GROUP BY r.state
   `;
-  return query(sql, [restaurant_id, leftTime, rightTime]);
+  return query(sql, [restaurant_id, from, to]);
 };
 
 exports.getCustomerOrder = async (customer_id, page, limit) => {

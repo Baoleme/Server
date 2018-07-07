@@ -57,7 +57,17 @@ exports.getRestaurantOrder = async ctx => {
 };
 
 exports.getRestaurantOrderCount = async ctx => {
-  ctx.body = await orderService.getRestaurantOrderCount(ctx.session.restaurant_id);
+  let { from, to } = ctx.query;
+  if (!from && !to) {
+    from = new Date(0);
+    to = new Date();
+  } else {
+    ctx.verify(
+      { data: from, type: 'date', message: 'from格式不正确' },
+      { data: to, type: 'date', message: 'to格式不正确' }
+    );
+  }
+  ctx.body = await orderService.getRestaurantOrderCount(ctx.session.restaurant_id, from, to);
 };
 
 exports.updateOrderState = async ctx => {
