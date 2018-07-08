@@ -24,12 +24,13 @@ exports.createDish = async ctx => {
 
 exports.updateDish = async ctx => {
   const info = _.pick(ctx.request.body, ['category_id', 'name', 'price', 'selling', 'spicy', 'specifications', 'image_url', 'description', 'tag']);
+  _.omitBy(info, v => v === null || v === undefined);
   const { id: dish_id } = ctx.params;
   ctx.verify(
     { data: Number(dish_id), type: 'positive', message: 'id格式不正确' },
     { data: info.category_id, type: 'positive', require: false, message: 'category_id格式不正确' },
     { data: info.name, type: 'string', maxLength: 45, require: false, message: 'name格式不正确' },
-    { data: info.price, type: 'number', require: false, message: 'price格式不正确' },
+    { data: info.price, type: 'non-negative', require: false, message: 'price格式不正确' },
     { data: info.selling, type: 'boolean', require: false, message: 'selling格式不正确' },
     { data: info.spicy, type: 'non-negative', require: false, message: 'spicy格式不正确' },
     { data: info.specifications, type: 'array', require: false, message: 'specifications格式不正确' },
